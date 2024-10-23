@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using medicalInformationSystem.Configurations.Constants;
 using medicalInformationSystem.Enum;
 
 namespace medicalInformationSystem.Model.Api;
@@ -19,13 +20,14 @@ public record DoctorModel
 
     public Guid Id { get; set; }
 
-    DateTime CreateTime { get; set; }
+    public DateTime CreateTime { get; set; }
 
-    [MinLength(1, ErrorMessage = "Minimum length of name is 1.")]
+    [StringLength(1000, MinimumLength = 1, ErrorMessage = ErrorConstants.DoctorNameLengthError)]
     public string Name { get; set; }
 
-    DateTime? Birthday { get; set; }
+    public DateTime? Birthday { get; set; }
 
+    [EnumDataType(typeof(Gender))]
     public Gender Gender { get; set; }
 
     public string Email { get; set; }
