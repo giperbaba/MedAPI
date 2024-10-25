@@ -2,7 +2,9 @@ namespace medicalInformationSystem.Model.Response;
 
 public class IcdRootsReportModel
 {
-    public IcdRootsReportFilterModel Filters { get; set; }
+    public IcdRootsReportFiltersModel Filters { get; set; }
     
-    public List<Icd>
+    public List<IcdRootsReportRecordModel>? Records { get; set; }
+    
+    public Dictionary<String, Int32>? SummaryByRoot { get; set; } 
 }

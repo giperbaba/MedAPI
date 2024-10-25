@@ -14,13 +14,16 @@ public class DoctorRegisterModel(
     string? phone,
     Guid speciality)
 {
+    [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [StringLength(1000, MinimumLength = 1, ErrorMessage = ErrorConstants.DoctorNameLengthError)]
     public string Name { get; set; } = name;
 
+    [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [MinLength(6, ErrorMessage = ErrorConstants.DoctorPasswordLengthError)]
     [RegularExpression(pattern: PasswordRegex, ErrorMessage = ErrorConstants.DoctorPasswordValidError)]
     public string Password { get; set; } = password;
 
+    [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [MinLength(1, ErrorMessage = ErrorConstants.DoctorEmailLengthError)]
     [RegularExpression(pattern: EmailRegex, ErrorMessage = ErrorConstants.DoctorEmailValidError)]
     public string Email { get; set; } = email;
@@ -28,11 +31,13 @@ public class DoctorRegisterModel(
     //TODO: Date validator
     public DateTime? Birthday { get; set; } = birthday;
 
+    [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [EnumDataType(typeof(Gender))]
     public Gender Gender { get; set; } = gender;
 
     [RegularExpression(pattern: RegexConstants.PhoneNumberRegex, ErrorMessage = ErrorConstants.DoctorPhoneNumberValidError)]
     public string? Phone { get; set; } = phone;
 
+    [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     public Guid Speciality { get; set; } = speciality;
 }

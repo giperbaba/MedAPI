@@ -3,7 +3,7 @@ using medicalInformationSystem.Configurations.Constants;
 
 namespace medicalInformationSystem.Model.Api;
 
-public class IncpectionCommentModel
+public class InspectionConsultationModel
 {
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     public Guid Id { get; set; }
@@ -11,11 +11,11 @@ public class IncpectionCommentModel
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     public DateTime CreateTime { get; set; }
     
-    public Guid? PatientId { get; set; }
+    public Guid InspectionId { get; set; }
     
-    public string? Content { get; set; }
+    public SpecialityModel Speciality { get; set; }
     
-    public DoctorModel Author { get; set; }
+    public InspectionConsultationModel RootComment { get; set; }
     
-    public DateTime ModifyTime { get; set; }
+    public Int32 CommentsNumber { get; set; }
 }

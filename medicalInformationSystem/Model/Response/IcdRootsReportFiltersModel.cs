@@ -1,6 +1,6 @@
 namespace medicalInformationSystem.Model.Response;
 
-public class IcdRootsReportFilterModel
+public class IcdRootsReportFiltersModel
 {
     public DateTime Start { get; set; }
     

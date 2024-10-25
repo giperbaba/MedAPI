@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "databases", "databases\databases.csproj", "{EAB4370A-06FB-4403-A1B6-42C09D2BD068}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EAB4370A-06FB-4403-A1B6-42C09D2BD068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAB4370A-06FB-4403-A1B6-42C09D2BD068}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAB4370A-06FB-4403-A1B6-42C09D2BD068}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAB4370A-06FB-4403-A1B6-42C09D2BD068}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
