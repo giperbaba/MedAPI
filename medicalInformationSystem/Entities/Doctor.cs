@@ -35,7 +35,7 @@ public class Doctor
     [Column("phone")]
     [StringLength(maximumLength: 12)]
     [RegularExpression(pattern: RegexConstants.PhoneNumberRegex, ErrorMessage = ErrorConstants.DoctorPhoneNumberValidError)]
-    public string Phone { get; set; }
+    public string? Phone { get; set; }
     
     [Column("password")]
     [StringLength(100, MinimumLength = 6, ErrorMessage = ErrorConstants.DoctorPasswordLengthError)]
@@ -50,5 +50,5 @@ public class Doctor
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     public DateTime CreateTime { get; set; }
     
-    public Speciality Speciality { get; set; }
+    public Guid Speciality { get; set; }
 }

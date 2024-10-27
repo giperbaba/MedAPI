@@ -1,7 +1,7 @@
 ﻿using medicalInformationSystem.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace medicalInformationSystem;
+namespace medicalInformationSystem.Data;
 
 public partial class MedicalDataContext : DbContext
 {
