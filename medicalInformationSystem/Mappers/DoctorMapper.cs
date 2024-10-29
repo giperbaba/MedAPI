@@ -10,8 +10,8 @@ public class DoctorMapper
         return new Doctor
         {
             Name = doctorModel.Name,
-            Birthday = doctorModel.Birthday,
-            CreateTime = DateTime.Now,
+            Birthday = doctorModel.Birthday.ToUniversalTime(),
+            CreateTime = DateTime.Now.ToUniversalTime(),
             Email = doctorModel.Email,
             Gender = doctorModel.Gender,
             Id = Guid.NewGuid(),

@@ -1,15 +1,37 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
+using medicalInformationSystem.Configurations;
 using medicalInformationSystem.Entities;
+using medicalInformationSystem.Models.Request;
 using medicalInformationSystem.Services.Interfaces;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace medicalInformationSystem.Services.Impls;
 
-public class TokenService: ITokenService
+public class TokenService(IOptions<JwtOptions> options): ITokenService
 {
+    private readonly JwtOptions _options = options.Value;
     public string GenerateAccessToken(Doctor doctor)
     {
-        //TODO: create jwt token
-        var jwt = string.Empty;
-        return jwt;
+        Claim[] claims =
+        [
+            new("doctorId", doctor.Id.ToString()), new("doctorEmail", doctor.Email),
+            new("doctorBirthday", doctor.Birthday.ToString() ?? string.Empty)
+        ];
+        
+        var signingCredentials = new SigningCredentials(
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
+            SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            signingCredentials: signingCredentials,
+            expires: DateTime.UtcNow.AddHours(_options.ExpiresHours));
+        
+        var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
+        
+        return tokenValue;
     }
 }

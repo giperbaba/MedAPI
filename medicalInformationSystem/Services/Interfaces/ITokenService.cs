@@ -1,4 +1,5 @@
 using medicalInformationSystem.Entities;
+using medicalInformationSystem.Models.Request;
 
 namespace medicalInformationSystem.Services.Interfaces;
 

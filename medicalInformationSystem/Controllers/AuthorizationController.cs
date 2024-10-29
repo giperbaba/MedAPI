@@ -1,10 +1,26 @@
+using medicalInformationSystem.Models.Api;
+using medicalInformationSystem.Models.Request;
+using medicalInformationSystem.Models.Response;
 using medicalInformationSystem.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace medicalInformationSystem.Controllers;
 
-public class AuthorizationController(IAuthService authService) : BaseController
+[ApiController]
+[Route("api/[controller]")]
+public class AuthorizationController(IAuthService authService) : ControllerBase
 {
-    private readonly IAuthService _authService = authService;
-    
-    
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(DoctorRegisterModel doctorRegisterModel)
+    {
+        await authService.Register(doctorRegisterModel);
+        return Ok();
+    }
+
+    [HttpPost("login")]
+    public async Task<TokenResponseModel> Login(DoctorLoginModel doctorLoginModel)
+    {
+        var token = await authService.Login(doctorLoginModel);
+        return token;
+    }
 }

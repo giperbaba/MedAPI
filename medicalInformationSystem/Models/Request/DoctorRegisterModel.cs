@@ -9,7 +9,7 @@ public class DoctorRegisterModel(
     string name,
     string password,
     string email,
-    DateTime? birthday,
+    DateTime birthday,
     Gender gender,
     string? phone,
     Guid speciality)
@@ -20,16 +20,14 @@ public class DoctorRegisterModel(
 
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [MinLength(6, ErrorMessage = ErrorConstants.DoctorPasswordLengthError)]
-    [RegularExpression(pattern: PasswordRegex, ErrorMessage = ErrorConstants.DoctorPasswordValidError)]
     public string Password { get; set; } = password;
 
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [MinLength(1, ErrorMessage = ErrorConstants.DoctorEmailLengthError)]
-    [RegularExpression(pattern: EmailRegex, ErrorMessage = ErrorConstants.DoctorEmailValidError)]
     public string Email { get; set; } = email;
 
     //TODO: Date validator
-    public DateTime? Birthday { get; set; } = birthday;
+    public DateTime Birthday { get; set; } = birthday;
 
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [EnumDataType(typeof(Gender))]

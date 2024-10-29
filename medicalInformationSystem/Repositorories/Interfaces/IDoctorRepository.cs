@@ -7,7 +7,7 @@ namespace medicalInformationSystem.Repositorories.Interfaces;
 
 public interface IDoctorRepository
 {
-    public Task<TokenModel> Register(DoctorRegisterModel doctor, string hashPassword);
+    public Task Add(Doctor doctor);
     
     public Task<Doctor?> GetDoctorByEmail (string email);
     public Task<Doctor?> GetDoctorById(Guid doctorId);

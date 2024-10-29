@@ -7,6 +7,6 @@ namespace medicalInformationSystem.Services.Interfaces;
 
 public interface IAuthService
 {
-    Task<TokenResponseModel> Register(DoctorRegisterModel doctor);
-    Task<TokenResponseModel> Login(DoctorLoginModel doctor);
+    Task Register(DoctorRegisterModel doctor);
+    Task<TokenResponseModel> Login(DoctorLoginModel doctorLoginModel);
 }

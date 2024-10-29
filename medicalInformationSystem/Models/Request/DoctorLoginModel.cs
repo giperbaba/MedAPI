@@ -13,11 +13,9 @@ public class DoctorLoginModel
 
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [MinLength(1, ErrorMessage = ErrorConstants.DoctorEmailLengthError)]
-    [RegularExpression(pattern: RegexConstants.EmailRegex, ErrorMessage = ErrorConstants.DoctorEmailValidError)]
     public string Email { get; set; }
     
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [MinLength(6, ErrorMessage = ErrorConstants.DoctorPasswordLengthError)]
-    [RegularExpression(pattern: RegexConstants.PasswordRegex, ErrorMessage = ErrorConstants.DoctorPasswordValidError)]
     public string Password { get; set; }
 }

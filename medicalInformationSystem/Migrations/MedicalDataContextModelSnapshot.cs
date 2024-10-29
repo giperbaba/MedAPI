@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using medicalInformationSystem;
 using medicalInformationSystem.Data;
 
 #nullable disable
@@ -18,7 +17,7 @@ namespace medicalInformationSystem.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -59,18 +58,18 @@ namespace medicalInformationSystem.Migrations
                         .HasColumnName("password");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(12)
                         .HasColumnType("character varying(12)")
                         .HasColumnName("phone");
+
+                    b.Property<Guid>("Speciality")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("SpecialityId")
                         .HasColumnType("uuid")
                         .HasColumnName("speciality_id");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SpecialityId");
 
                     b.ToTable("Doctors");
                 });
@@ -94,17 +93,6 @@ namespace medicalInformationSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Specialities");
-                });
-
-            modelBuilder.Entity("medicalInformationSystem.Entities.Doctor", b =>
-                {
-                    b.HasOne("medicalInformationSystem.Entities.Speciality", "Speciality")
-                        .WithMany()
-                        .HasForeignKey("SpecialityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Speciality");
                 });
 #pragma warning restore 612, 618
         }
