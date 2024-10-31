@@ -17,8 +17,7 @@ public class TokenService(IOptions<JwtOptions> options): ITokenService
     {
         Claim[] claims =
         [
-            new("doctorId", doctor.Id.ToString()), new("doctorEmail", doctor.Email),
-            new("doctorBirthday", doctor.Birthday.ToString() ?? string.Empty)
+            new("doctorId", doctor.Id.ToString())
         ];
         
         var signingCredentials = new SigningCredentials(

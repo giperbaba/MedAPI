@@ -1,18 +1,11 @@
-using System.Security.Cryptography;
 using medicalInformationSystem.Data;
 using medicalInformationSystem.Entities;
 using medicalInformationSystem.Mappers;
 using medicalInformationSystem.Models.Api;
-using medicalInformationSystem.Models.Request;
-using medicalInformationSystem.Repositorories.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+using medicalInformationSystem.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32.SafeHandles;
-using BCrypt.Net;
-using medicalInformationSystem.Configurations;
-using medicalInformationSystem.Services.Impls;
 
-namespace medicalInformationSystem.Repositorories.Impls;
+namespace medicalInformationSystem.Repositories.Impls;
 
 public class DoctorRepository(MedicalDataContext context) : IDoctorRepository
 {
@@ -28,13 +21,10 @@ public class DoctorRepository(MedicalDataContext context) : IDoctorRepository
         return await context.Doctors.FirstOrDefaultAsync(doctor => doctor.Email == email);
     }
 
-    public Task<Doctor?> GetDoctorById(Guid doctorId)
+    public async Task<Doctor?> GetDoctorById(Guid doctorId)
     {
-        throw new NotImplementedException();
+        return await context.Doctors.FirstOrDefaultAsync(doctor => doctor.Id == doctorId);
     }
-
-    public Task AddDoctor(Doctor doctor)
-    {
-        throw new NotImplementedException();
-    }
+    
+    
 }

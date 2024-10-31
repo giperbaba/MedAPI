@@ -1,7 +1,10 @@
+using System.Security.Claims;
 using medicalInformationSystem.Models.Api;
 using medicalInformationSystem.Models.Request;
 using medicalInformationSystem.Models.Response;
+using medicalInformationSystem.Services.Impls;
 using medicalInformationSystem.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace medicalInformationSystem.Controllers;
@@ -11,10 +14,10 @@ namespace medicalInformationSystem.Controllers;
 public class AuthorizationController(IAuthService authService) : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<IActionResult> Register(DoctorRegisterModel doctorRegisterModel)
+    public async Task<TokenResponseModel> Register(DoctorRegisterModel doctorRegisterModel)
     {
-        await authService.Register(doctorRegisterModel);
-        return Ok();
+        var token = await authService.Register(doctorRegisterModel);
+        return token;
     }
 
     [HttpPost("login")]
@@ -22,5 +25,35 @@ public class AuthorizationController(IAuthService authService) : ControllerBase
     {
         var token = await authService.Login(doctorLoginModel);
         return token;
+    }
+
+    [HttpPost("logout")]
+    public async Task<ResponseModel> Logout()
+    {
+        return await authService.Logout();
+    }
+
+    [HttpGet("profile")]
+    [Authorize]
+    public async Task<DoctorModel> GetProfile()
+    {
+        return await authService.GetProfile(GetDoctorId());
+    }
+    
+    private Guid GetDoctorId()
+    {
+        var doctorIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "doctorId");
+
+        if (doctorIdClaim == null)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        if (!Guid.TryParse(doctorIdClaim.Value, out var doctorId))
+        {
+            throw new InvalidOperationException("Invalid Doctor ID.");
+        }
+
+        return doctorId;
     }
 }

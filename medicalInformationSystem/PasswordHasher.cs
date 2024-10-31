@@ -1,4 +1,4 @@
-namespace medicalInformationSystem.Configurations;
+namespace medicalInformationSystem;
 
 public static class PasswordHasher
 {

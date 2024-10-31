@@ -1,11 +1,12 @@
 using medicalInformationSystem.Entities;
+using medicalInformationSystem.Models.Api;
 using medicalInformationSystem.Models.Request;
 
 namespace medicalInformationSystem.Mappers;
 
 public class DoctorMapper
 {
-    public static Doctor Map(DoctorRegisterModel doctorModel, string hashPassword)
+    public static Doctor MapFromRegisterModelToEntity(DoctorRegisterModel doctorModel, string hashPassword)
     {
         return new Doctor
         {
@@ -19,5 +20,18 @@ public class DoctorMapper
             Phone = doctorModel.Phone,
             Speciality = doctorModel.Speciality,
         };
+    }
+
+    public static DoctorModel MapFromEntityToDoctorModel(Doctor doctor)
+    {
+        return new DoctorModel(
+            doctor.Id,
+            DateTime.Now.ToUniversalTime(),
+            doctor.Name,
+            doctor.Birthday,
+            doctor.Gender,
+            doctor.Email,
+            doctor.Phone
+        );
     }
 }

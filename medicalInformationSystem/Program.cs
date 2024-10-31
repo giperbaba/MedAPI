@@ -1,23 +1,36 @@
+using medicalInformationSystem.Configurations;
+using medicalInformationSystem.Configurations.Constants;
 using medicalInformationSystem.Data;
+using medicalInformationSystem.Repositories.Impls;
+using medicalInformationSystem.Repositories.Interfaces;
 using medicalInformationSystem.Services.Interfaces;
 using medicalInformationSystem.Services.Impls;
-using medicalInformationSystem.Repositorories.Interfaces;
-using medicalInformationSystem.Repositorories.Impls;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var configuration = builder.Configuration;
 
-builder.Services.AddControllers();
+services.AddControllers();
 
-builder.Services.AddDbContext<MedicalDataContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));
+services.AddDbContext<MedicalDataContext>(options =>
+    options.UseNpgsql(configuration.GetConnectionString("DatabaseConnection")));
 
-builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+services.AddScoped<IDoctorRepository, DoctorRepository>();
+services.AddScoped<ITokenService, TokenService>();
+services.AddScoped<IAuthService, AuthService>();
 
-builder.Services.AddSwaggerGen(c =>
+services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
+
+services.AddHttpContextAccessor(); 
+
+services.AddSingleton<JwtConfiguration>();
+JwtConfiguration.AddApiAuthentication(services, services.BuildServiceProvider().GetRequiredService<IOptions<JwtOptions>>());
+
+services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Medical Information System API", Version = "v1" });
 });
@@ -33,7 +46,16 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+app.UseCookiePolicy(new CookiePolicyOptions()
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+    HttpOnly = HttpOnlyPolicy.Always,
+    Secure = CookieSecurePolicy.Always,
+});
+
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
