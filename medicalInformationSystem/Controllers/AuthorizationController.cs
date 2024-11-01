@@ -39,6 +39,13 @@ public class AuthorizationController(IAuthService authService) : ControllerBase
     {
         return await authService.GetProfile(GetDoctorId());
     }
+
+    [HttpPut("profile")]
+    [Authorize]
+    public async Task<ResponseModel> EditProfile(DoctorEditModel doctorEditModel)
+    {
+        return await authService.EditProfile(doctorEditModel);
+    }
     
     private Guid GetDoctorId()
     {

@@ -11,4 +11,6 @@ public interface IAuthService
 
     Task<ResponseModel> Logout();
     Task<DoctorModel> GetProfile(Guid doctorId);
+
+    Task<ResponseModel> EditProfile(DoctorEditModel doctorEditModel);
 }

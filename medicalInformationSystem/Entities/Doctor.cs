@@ -20,7 +20,7 @@ public class Doctor
     public string Name { get; set; }
 
     [Column("birthday")]
-    public DateTime? Birthday { get; set; }
+    public DateTime Birthday { get; set; }
 
     [Column("gender")]
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]

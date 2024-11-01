@@ -1,3 +1,4 @@
+using medicalInformationSystem.Entities;
 using medicalInformationSystem.Mappers;
 using medicalInformationSystem.Models.Api;
 using medicalInformationSystem.Models.Request;
@@ -9,7 +10,7 @@ namespace medicalInformationSystem.Services.Impls;
 
 public class AuthService(
     IDoctorRepository doctorRepository,
-    ITokenService tokenService, 
+    ITokenService tokenService,
     IHttpContextAccessor httpContextAccessor) : IAuthService
 {
 
@@ -58,6 +59,25 @@ public class AuthService(
         httpContextAccessor.HttpContext?.Response.Cookies.Delete("secret-cookies"); 
 
         return Task.FromResult(new ResponseModel(null, "Logout successful"));
+    }
+
+    public async Task<ResponseModel> EditProfile(DoctorEditModel doctorEditModel)
+    {
+        var doctorFromDatabase = await doctorRepository.GetDoctorByEmail(doctorEditModel.Email);
+
+        if (doctorFromDatabase is null)
+        {
+            throw new Exception(); //TODO: норм ошибка нет такого пользователя
+        }
+        
+        doctorFromDatabase.Name = doctorEditModel.Name;
+        doctorFromDatabase.Birthday = doctorEditModel.Birthday.ToUniversalTime();
+        doctorFromDatabase.Phone = doctorEditModel.Phone;
+        doctorFromDatabase.Gender = doctorEditModel.Gender;
+        
+        await doctorRepository.Edit(doctorFromDatabase);
+        
+        return new ResponseModel(null, "Edit successful");
     }
 
     public async Task<DoctorModel> GetProfile(Guid doctorId)

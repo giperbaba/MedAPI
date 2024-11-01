@@ -16,6 +16,12 @@ public class DoctorRepository(MedicalDataContext context) : IDoctorRepository
         await context.SaveChangesAsync();
     }
 
+    public async Task Edit(Doctor doctor)
+    {
+        context.Doctors.Attach(doctor).State = EntityState.Modified;
+        await context.SaveChangesAsync();
+    }
+
     public async Task<Doctor?> GetDoctorByEmail(string email)
     {
         return await context.Doctors.FirstOrDefaultAsync(doctor => doctor.Email == email);
@@ -25,6 +31,4 @@ public class DoctorRepository(MedicalDataContext context) : IDoctorRepository
     {
         return await context.Doctors.FirstOrDefaultAsync(doctor => doctor.Id == doctorId);
     }
-    
-    
 }
