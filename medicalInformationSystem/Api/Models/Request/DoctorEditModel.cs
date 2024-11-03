@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using medicalInformationSystem.Configurations.Constants;
 using medicalInformationSystem.Enum;
+using medicalInformationSystem.Validator;
 using static medicalInformationSystem.Configurations.Constants.RegexConstants;
 
 namespace medicalInformationSystem.Models.Request;
@@ -25,7 +26,7 @@ public class DoctorEditModel
     [StringLength(1000, MinimumLength = 1, ErrorMessage = ErrorConstants.NameLengthError)]
     public string Name { get; set; }
     
-    //TODO: Date validator
+    [DatetimeValidator(ErrorMessage = ErrorConstants.IncorrectDateError)]
     public DateTime Birthday { get; set; }
 
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]

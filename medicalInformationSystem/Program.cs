@@ -5,6 +5,7 @@ using medicalInformationSystem.Core.Repositories.Interfaces;
 using medicalInformationSystem.Core.Services.Impls;
 using medicalInformationSystem.Core.Services.Interfaces;
 using medicalInformationSystem.Data;
+using medicalInformationSystem.Middleware;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -56,6 +57,8 @@ app.UseCookiePolicy(new CookiePolicyOptions()
     HttpOnly = HttpOnlyPolicy.Always,
     Secure = CookieSecurePolicy.Always,
 });
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

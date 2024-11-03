@@ -1,10 +1,11 @@
 using medicalInformationSystem.Api.Models.Api;
 using medicalInformationSystem.Api.Models.Request;
+using medicalInformationSystem.Configurations.Constants;
 using medicalInformationSystem.Core.Mappers;
-using medicalInformationSystem.Core.Repositories.Impls;
 using medicalInformationSystem.Core.Repositories.Interfaces;
 using medicalInformationSystem.Core.Services.Interfaces;
 using medicalInformationSystem.core.utils;
+using medicalInformationSystem.Exceptions;
 using medicalInformationSystem.Models.Request;
 using medicalInformationSystem.Models.Response;
 
@@ -20,10 +21,10 @@ public class AuthService (
     public async Task<TokenResponseModel> Register(DoctorRegisterModel user)
     {
         if (await doctorRepository.GetDoctorByEmail(user.Email) is not null)
-            throw new Exception(); //TODO: Такой пользователь уже существует
+            throw new ProfileAlreadyExistsException(ErrorConstants.ProfileAlreadyExistsError);
         
         if (await specialityRepository.GetById(user.SpecialityId) is null) 
-            throw new Exception("Специальность не существует");
+            throw new SpecialityNotFoundException(ErrorConstants.SpecialityNotFoundError); 
         
         var newDoctor = DoctorMapper.MapFromRegisterModelToEntity(user, PasswordManager.Generate(user.Password));
 
@@ -43,13 +44,13 @@ public class AuthService (
 
         if (doctorFromDatabase is null)
         {
-            throw new Exception(); //TODO: норм ошибка нет такого пользователя
+            throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);
         }
 
         var checkDoctorPassword = PasswordManager.Verify(loginUser.Password, doctorFromDatabase.Password);
 
         if (!checkDoctorPassword) {
-            throw new Exception(); //TODO: норм ошибка пароль не тот
+            throw new InvalidPasswordException(ErrorConstants.InvalidPasswordError);
         }
 
         var token = tokenService.GenerateAccessToken(doctorFromDatabase);
@@ -73,7 +74,7 @@ public class AuthService (
 
         if (doctorFromDatabase is null)
         {
-            throw new Exception(); //TODO: норм ошибка нет такого пользователя
+            throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);
         }
         
         doctorFromDatabase.Name = doctorEditModel.Name;
@@ -92,7 +93,7 @@ public class AuthService (
         
         if (doctor is null)
         {
-            throw new Exception(""); //TODO: ошибка нет профиля
+            throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);
         }
 
         return DoctorMapper.MapFromEntityToDoctorModel(doctor);

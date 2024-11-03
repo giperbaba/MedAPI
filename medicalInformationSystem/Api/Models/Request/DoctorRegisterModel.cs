@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using medicalInformationSystem.Configurations.Constants;
 using medicalInformationSystem.Enum;
+using medicalInformationSystem.Validator;
 
 namespace medicalInformationSystem.Api.Models.Request;
 
@@ -27,7 +28,7 @@ public class DoctorRegisterModel(
     [RegularExpression(pattern: RegexConstants.EmailRegex, ErrorMessage = ErrorConstants.EmailValidError)]
     public string Email { get; set; } = email;
 
-    //TODO: Date validator
+    [DatetimeValidator(ErrorMessage = ErrorConstants.IncorrectDateError)]
     public DateTime Birthday { get; set; } = birthday;
 
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
