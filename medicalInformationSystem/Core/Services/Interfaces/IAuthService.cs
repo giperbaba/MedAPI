@@ -12,8 +12,4 @@ public interface IAuthService
     Task<TokenResponseModel> Login(DoctorLoginModel doctorLoginModel);
 
     Task<ResponseModel> Logout();
-    
-    Task<DoctorModel> GetProfile(Guid doctorId);
-
-    Task<ResponseModel> EditProfile(DoctorEditModel doctorEditModel);
 }

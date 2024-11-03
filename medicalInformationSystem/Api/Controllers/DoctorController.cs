@@ -11,7 +11,7 @@ namespace medicalInformationSystem.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DoctorController(IAuthService authService) : ControllerBase
+public class DoctorController(IAuthService authService, IProfileService profileService) : ControllerBase
 {
     [HttpPost("register")]
     public async Task<TokenResponseModel> Register(DoctorRegisterModel doctorRegisterModel)
@@ -37,14 +37,14 @@ public class DoctorController(IAuthService authService) : ControllerBase
     [Authorize]
     public async Task<DoctorModel> GetProfile()
     {
-        return await authService.GetProfile(GetDoctorId());
+        return await profileService.GetProfile(GetDoctorId());
     }
 
     [HttpPut("profile")]
     [Authorize]
     public async Task<ResponseModel> EditProfile(DoctorEditModel doctorEditModel)
     {
-        return await authService.EditProfile(doctorEditModel);
+        return await profileService.EditProfile(doctorEditModel);
     }
     
     private Guid GetDoctorId()

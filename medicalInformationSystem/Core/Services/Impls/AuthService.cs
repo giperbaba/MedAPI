@@ -67,35 +67,4 @@ public class AuthService (
 
         return Task.FromResult(new ResponseModel(null, "Logout successful"));
     }
-
-    public async Task<ResponseModel> EditProfile(DoctorEditModel doctorEditModel)
-    {
-        var doctorFromDatabase = await doctorRepository.GetDoctorByEmail(doctorEditModel.Email);
-
-        if (doctorFromDatabase is null)
-        {
-            throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);
-        }
-        
-        doctorFromDatabase.Name = doctorEditModel.Name;
-        doctorFromDatabase.Birthday = doctorEditModel.Birthday.ToUniversalTime();
-        doctorFromDatabase.Phone = doctorEditModel.Phone;
-        doctorFromDatabase.Gender = doctorEditModel.Gender;
-        
-        await doctorRepository.Edit(doctorFromDatabase);
-        
-        return new ResponseModel(null, "Edit successful");
-    }
-
-    public async Task<DoctorModel> GetProfile(Guid doctorId)
-    {
-        var doctor = await doctorRepository.GetDoctorById(doctorId);
-        
-        if (doctor is null)
-        {
-            throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);
-        }
-
-        return DoctorMapper.MapFromEntityToDoctorModel(doctor);
-    }
 }

@@ -1,13 +1,7 @@
 using medicalInformationSystem.Configurations;
 using medicalInformationSystem.Configurations.Constants;
-using medicalInformationSystem.Core.Repositories.Impls;
-using medicalInformationSystem.Core.Repositories.Interfaces;
-using medicalInformationSystem.Core.Services.Impls;
 using medicalInformationSystem.Core.Services.Interfaces;
-using medicalInformationSystem.Data;
-using medicalInformationSystem.Middleware;
 using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
@@ -17,19 +11,11 @@ var configuration = builder.Configuration;
 
 services.AddControllers();
 
-services.AddDbContext<MedicalDataContext>(options =>
-    options.UseNpgsql(configuration.GetConnectionString("DatabaseConnection")));
+DatabaseConfiguration.ConfigureDatabase(services, configuration);
 
-services.AddScoped<IDoctorRepository, DoctorRepository>();
-services.AddScoped<ITokenService, TokenService>();
-services.AddScoped<ISpecialityRepository, SpecialityRepository>(); 
-services.AddScoped<IAuthService, AuthService>();
-services.AddScoped<IIcd10Repository, Icd10Repository>(); 
-services.AddScoped<IIcd10Service, Icd10Service>(); 
-
+ServiceConfiguration.AddServices(services, configuration);
 
 services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
-
 services.AddHttpContextAccessor(); 
 
 services.AddSingleton<JwtConfiguration>();
@@ -58,10 +44,8 @@ app.UseCookiePolicy(new CookiePolicyOptions()
     Secure = CookieSecurePolicy.Always,
 });
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.UseAuthentication();
-app.UseAuthorization();
+MiddlewareConfiguration.ConfigureMiddleware(app);
 
 app.UseHttpsRedirection();
 app.MapControllers();
@@ -71,4 +55,5 @@ using (var scope = app.Services.CreateScope())
     var icd10Service = scope.ServiceProvider.GetRequiredService<IIcd10Service>();
     await icd10Service.UploadIcd10Json(); 
 }
+
 app.Run();
