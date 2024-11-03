@@ -1,4 +1,4 @@
-namespace medicalInformationSystem.Configurations;
+namespace medicalInformationSystem.Configurations.Options;
 
 public class JwtOptions
 {

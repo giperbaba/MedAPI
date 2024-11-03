@@ -1,4 +1,5 @@
 using System.Text;
+using medicalInformationSystem.Configurations.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

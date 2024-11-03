@@ -6,21 +6,24 @@ using medicalInformationSystem.Models.Request;
 using medicalInformationSystem.Models.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace medicalInformationSystem.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/doctor")]
 public class DoctorController(IAuthService authService, IProfileService profileService) : ControllerBase
 {
     [HttpPost("register")]
+    [SwaggerOperation(Summary = "Register new user")]
     public async Task<TokenResponseModel> Register(DoctorRegisterModel doctorRegisterModel)
     {
         var token = await authService.Register(doctorRegisterModel);
         return token;
     }
-
+    
     [HttpPost("login")]
+    [SwaggerOperation(Summary = "Login in to the system")]
     public async Task<TokenResponseModel> Login(DoctorLoginModel doctorLoginModel)
     {
         var token = await authService.Login(doctorLoginModel);
@@ -28,19 +31,22 @@ public class DoctorController(IAuthService authService, IProfileService profileS
     }
 
     [HttpPost("logout")]
+    [SwaggerOperation(Summary = "Log out system user")]
     public async Task<ResponseModel> Logout()
     {
         return await authService.Logout();
     }
-
+    
     [HttpGet("profile")]
+    [SwaggerOperation(Summary = "Get user profile")]
     [Authorize]
     public async Task<DoctorModel> GetProfile()
     {
         return await profileService.GetProfile(GetDoctorId());
     }
-
+    
     [HttpPut("profile")]
+    [SwaggerOperation(Summary = "Edit user profile")]
     [Authorize]
     public async Task<ResponseModel> EditProfile(DoctorEditModel doctorEditModel)
     {

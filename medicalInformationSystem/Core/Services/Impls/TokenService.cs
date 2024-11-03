@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using medicalInformationSystem.Configurations;
+using medicalInformationSystem.Configurations.Options;
 using medicalInformationSystem.Core.Services.Interfaces;
 using medicalInformationSystem.Data.Entities;
 using Microsoft.Extensions.Options;

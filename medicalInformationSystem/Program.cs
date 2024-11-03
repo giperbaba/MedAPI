@@ -1,5 +1,5 @@
 using medicalInformationSystem.Configurations;
-using medicalInformationSystem.Configurations.Constants;
+using medicalInformationSystem.Configurations.Options;
 using medicalInformationSystem.Core.Services.Interfaces;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.Extensions.Options;
@@ -24,6 +24,7 @@ JwtConfiguration.AddApiAuthentication(services, services.BuildServiceProvider().
 services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Medical Information System API", Version = "v1" });
+    c.EnableAnnotations();
 });
 
 var app = builder.Build();

@@ -15,7 +15,7 @@ public class AuthService (
     IDoctorRepository doctorRepository,
     ITokenService tokenService,
     ISpecialityRepository specialityRepository,
-    IHttpContextAccessor httpContextAccessor) : IAuthService
+    HttpContext httpContext) : IAuthService
 {
 
     public async Task<TokenResponseModel> Register(DoctorRegisterModel user)
@@ -33,7 +33,7 @@ public class AuthService (
         var token = tokenService.GenerateAccessToken(newDoctor);
         var tokenResponseModel = new TokenResponseModel(token);
         
-        httpContextAccessor.HttpContext?.Response.Cookies.Append("secret-cookies", token);
+        httpContext?.Response.Cookies.Append("secret-cookies", token);
             
         return tokenResponseModel;
     }
@@ -56,14 +56,14 @@ public class AuthService (
         var token = tokenService.GenerateAccessToken(doctorFromDatabase);
         var tokenResponseModel = new TokenResponseModel(token);
             
-        httpContextAccessor.HttpContext?.Response.Cookies.Append("secret-cookies", token);
+        httpContext?.Response.Cookies.Append("secret-cookies", token);
         
         return tokenResponseModel;
     }
 
     public Task<ResponseModel> Logout()
     {
-        httpContextAccessor.HttpContext?.Response.Cookies.Delete("secret-cookies"); 
+        httpContext?.Response.Cookies.Delete("secret-cookies"); 
 
         return Task.FromResult(new ResponseModel(null, "Logout successful"));
     }
