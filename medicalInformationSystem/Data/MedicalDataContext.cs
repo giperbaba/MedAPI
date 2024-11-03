@@ -1,4 +1,4 @@
-﻿using medicalInformationSystem.Entities;
+﻿using medicalInformationSystem.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace medicalInformationSystem.Data;
@@ -35,5 +35,6 @@ public partial class MedicalDataContext : DbContext
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     
     public DbSet<Doctor> Doctors { get; set; } = null!;
-    public DbSet<Speciality> Specialities { get; set; } = null!;
+    public DbSet<Speciality?> Specialities { get; set; } = null!;
+    public DbSet<Icd10> Icd10s { get; set; } = null!;
 }

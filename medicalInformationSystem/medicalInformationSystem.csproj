@@ -27,7 +27,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
+      <Folder Include="Api\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Icd10codes\icd10codes.json" />
     </ItemGroup>
 
 </Project>

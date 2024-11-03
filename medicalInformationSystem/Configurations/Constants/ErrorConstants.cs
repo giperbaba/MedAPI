@@ -12,20 +12,19 @@ public static class ErrorConstants
     
     public const string  AuthorNameLengthError = "Minimum length author's name is 1";
     
-    public const string DoctorNameLengthError = "Doctor Name must be between 1 and 1000 characters";
-    public const string DoctorEmailLengthError = "Minimum length of doctor's email is 1";
-    public const string DoctorPasswordLengthError = "Doctor Password must be minimum 6 characters";
+    public const string NameLengthError = "Doctor Name must be between 1 and 1000 characters";
+    public const string EmailLengthError = "Minimum length of doctor's email is 1";
+    public const string PasswordLengthError = "Doctor Password must be minimum 6 characters";
     
-    public const string DoctorEmailValidError = "Invalid email format";
-    public const string DoctorPasswordValidError = "Invalid password format";
-    public const string DoctorPhoneNumberValidError = "Invalid phone number format";
+    public const string EmailValidError = "Invalid email format";
+    public const string PasswordValidError = "Invalid password format";
+    public const string PhoneNumberValidError = "Invalid phone number format";
     
     public const string InspectionAnamnesisLengthError = "Anamnesis length must be between 1 and 5000 characters";
     public const string InspectionComplaintsLengthError = "Complaints length must be between 1 and 5000 characters";
     public const string InspectionTreatmentLengthError = "Treatment length must be between 1 and 5000 characters";
     public const string InspectionListDiagnosesLengthError = "At least one diagnosis is required.";
     
-    public const string PatientNameLengthError = "Minimum length patient name is 1";
     
     public const string RequiredFieldError = "Field is required";
 }

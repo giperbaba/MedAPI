@@ -1,10 +1,10 @@
 using medicalInformationSystem.Configurations;
 using medicalInformationSystem.Configurations.Constants;
+using medicalInformationSystem.Core.Repositories.Impls;
+using medicalInformationSystem.Core.Repositories.Interfaces;
+using medicalInformationSystem.Core.Services.Impls;
+using medicalInformationSystem.Core.Services.Interfaces;
 using medicalInformationSystem.Data;
-using medicalInformationSystem.Repositories.Impls;
-using medicalInformationSystem.Repositories.Interfaces;
-using medicalInformationSystem.Services.Interfaces;
-using medicalInformationSystem.Services.Impls;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -21,7 +21,11 @@ services.AddDbContext<MedicalDataContext>(options =>
 
 services.AddScoped<IDoctorRepository, DoctorRepository>();
 services.AddScoped<ITokenService, TokenService>();
+services.AddScoped<ISpecialityRepository, SpecialityRepository>(); 
 services.AddScoped<IAuthService, AuthService>();
+services.AddScoped<IIcd10Repository, Icd10Repository>(); 
+services.AddScoped<IIcd10Service, Icd10Service>(); 
+
 
 services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
 
@@ -58,4 +62,10 @@ app.UseAuthorization();
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var icd10Service = scope.ServiceProvider.GetRequiredService<IIcd10Service>();
+    await icd10Service.UploadIcd10Json(); 
+}
 app.Run();

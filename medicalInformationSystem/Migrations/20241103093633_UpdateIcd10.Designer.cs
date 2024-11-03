@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using medicalInformationSystem.Data;
@@ -11,9 +12,11 @@ using medicalInformationSystem.Data;
 namespace medicalInformationSystem.Migrations
 {
     [DbContext(typeof(MedicalDataContext))]
-    partial class MedicalDataContextModelSnapshot : ModelSnapshot
+    [Migration("20241103093633_UpdateIcd10")]
+    partial class UpdateIcd10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,27 +123,6 @@ namespace medicalInformationSystem.Migrations
                     b.ToTable("Icd10");
                 });
 
-            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Speciality", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreateTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("create_time");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Specialities");
-                });
-
             modelBuilder.Entity("medicalInformationSystem.Entities.Inspection", b =>
                 {
                     b.Property<Guid>("Id")
@@ -205,9 +187,30 @@ namespace medicalInformationSystem.Migrations
                     b.ToTable("Inspections");
                 });
 
+            modelBuilder.Entity("medicalInformationSystem.Entities.Speciality", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("create_time");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Specialities");
+                });
+
             modelBuilder.Entity("medicalInformationSystem.Data.Entities.Doctor", b =>
                 {
-                    b.HasOne("medicalInformationSystem.Data.Entities.Speciality", "Speciality")
+                    b.HasOne("medicalInformationSystem.Entities.Speciality", "Speciality")
                         .WithMany("Doctors")
                         .HasForeignKey("SpecialityId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -232,7 +235,7 @@ namespace medicalInformationSystem.Migrations
                     b.Navigation("Inspections");
                 });
 
-            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Speciality", b =>
+            modelBuilder.Entity("medicalInformationSystem.Entities.Speciality", b =>
                 {
                     b.Navigation("Doctors");
                 });

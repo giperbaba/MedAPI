@@ -4,9 +4,9 @@ namespace medicalInformationSystem.Configurations.Constants;
 
 public static class RegexConstants
 {
-    public const string EmailRegex = "^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$";
+    public const string EmailRegex = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
 
-    public const string PhoneNumberRegex = "^(\\+)?((\\d{2,3}) ?\\d|\\d)(([ -]?\\d)|( ?(\\d{2,3}) ?)){5,12}\\d$";
+    public const string PhoneNumberRegex = @"^((\+7)|8)[0-9]{10}$";
 
-    public const string PasswordRegex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$";
+    public const string PasswordRegex = @"^(?=.*[A-Za-z])(?=.*\d).{4,}$";
 }
