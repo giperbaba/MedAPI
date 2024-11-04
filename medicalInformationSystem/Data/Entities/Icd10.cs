@@ -15,7 +15,7 @@ public class Icd10
     
     [Key]
     [Column("id_guid")]
-    public Guid? IdGuid { get; set; }
+    public Guid IdGuid { get; set; }
     [Column("id_int")]
     public int IdInt { get; set; }
     

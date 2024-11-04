@@ -13,7 +13,7 @@ services.AddControllers();
 
 DatabaseConfiguration.ConfigureDatabase(services, configuration);
 
-ServiceConfiguration.AddServices(services, configuration);
+ServiceConfiguration.AddServices(services);
 
 services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
 services.AddHttpContextAccessor(); 

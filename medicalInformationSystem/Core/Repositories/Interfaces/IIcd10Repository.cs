@@ -10,4 +10,8 @@ public interface IIcd10Repository
     public Task<Icd10> GetByIdInt(string? id);
 
     public Task UpdateGuidParent(Guid? idGuid, Guid? newParentGuid);
+
+    public Task<List<Icd10>> GetListIcd10(int skip, int take, string nameFilter);
+
+    public Task<int> GetLength();
 }

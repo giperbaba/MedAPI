@@ -1,7 +1,6 @@
-using medicalInformationSystem.Api.Models.Response;
-using medicalInformationSystem.Models.Api;
+using medicalInformationSystem.Api.Models.Api;
 
-namespace medicalInformationSystem.Models.Response;
+namespace medicalInformationSystem.Api.Models.Response;
 
 public class Icd10SearchModel
 {

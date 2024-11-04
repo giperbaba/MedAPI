@@ -34,10 +34,10 @@ public class Icd10Service(IIcd10Repository icd10Repository) : IIcd10Service
             }
         }
     }
-    public async Task AddToDb(Icd10Model currentIcd10Node, Guid? idGuid, Guid? parentGuid)
+    public async Task AddToDb(Icd10Model currentIcd10Node, Guid idGuid, Guid? parentGuid)
     {
         currentIcd10Node.idGuid = idGuid;
-        Icd10 icd10Entity = Icd10Mapper.MapIcd10ModelToEntity(currentIcd10Node, idGuid, parentGuid);
+        Icd10 icd10Entity = Icd10Mapper.MapFromModelToEntity(currentIcd10Node, idGuid, parentGuid);
 
         await icd10Repository.Add(icd10Entity);
     }

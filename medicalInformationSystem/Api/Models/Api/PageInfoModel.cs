@@ -1,4 +1,4 @@
-namespace medicalInformationSystem.Models.Api;
+namespace medicalInformationSystem.Api.Models.Api;
 
 public class PageInfoModel
 {

@@ -1,3 +1,4 @@
+#nullable enable
 using medicalInformationSystem.Core.Repositories.Interfaces;
 using medicalInformationSystem.Data;
 using medicalInformationSystem.Data.Entities;

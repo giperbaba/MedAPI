@@ -1,4 +1,3 @@
-using medicalInformationSystem.Api.Models.Api;
 using medicalInformationSystem.Api.Models.Request;
 using medicalInformationSystem.Configurations.Constants;
 using medicalInformationSystem.Core.Mappers;
@@ -6,16 +5,15 @@ using medicalInformationSystem.Core.Repositories.Interfaces;
 using medicalInformationSystem.Core.Services.Interfaces;
 using medicalInformationSystem.core.utils;
 using medicalInformationSystem.Exceptions;
-using medicalInformationSystem.Models.Request;
 using medicalInformationSystem.Models.Response;
 
 namespace medicalInformationSystem.Core.Services.Impls;
 
-public class AuthService (
+public class DoctorAuthService (
     IDoctorRepository doctorRepository,
     ITokenService tokenService,
     ISpecialityRepository specialityRepository,
-    HttpContext httpContext) : IAuthService
+    IHttpContextAccessor httpContextAccessor) : IAuthService
 {
 
     public async Task<TokenResponseModel> Register(DoctorRegisterModel user)
@@ -33,37 +31,39 @@ public class AuthService (
         var token = tokenService.GenerateAccessToken(newDoctor);
         var tokenResponseModel = new TokenResponseModel(token);
         
-        httpContext?.Response.Cookies.Append("secret-cookies", token);
+        httpContextAccessor.HttpContext?.Response.Cookies.Append("secret-cookies", token);
             
         return tokenResponseModel;
     }
 
-    public async Task<TokenResponseModel> Login(DoctorLoginModel loginUser)
+    public async Task<TokenResponseModel> Login(DoctorLoginModel user)
     {
-        var doctorFromDatabase = await doctorRepository.GetDoctorByEmail(loginUser.Email);
+        var userFromDb = await doctorRepository.GetDoctorByEmail(user.Email);
+        
+        Console.WriteLine(userFromDb);
 
-        if (doctorFromDatabase is null)
+        if (userFromDb is null)
         {
             throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);
         }
 
-        var checkDoctorPassword = PasswordManager.Verify(loginUser.Password, doctorFromDatabase.Password);
+        var isPasswordTrue = PasswordManager.Verify(user.Password, userFromDb.Password);
 
-        if (!checkDoctorPassword) {
+        if (!isPasswordTrue) {
             throw new InvalidPasswordException(ErrorConstants.InvalidPasswordError);
         }
 
-        var token = tokenService.GenerateAccessToken(doctorFromDatabase);
+        var token = tokenService.GenerateAccessToken(userFromDb);
         var tokenResponseModel = new TokenResponseModel(token);
             
-        httpContext?.Response.Cookies.Append("secret-cookies", token);
+        httpContextAccessor.HttpContext?.Response.Cookies.Append("secret-cookies", token);
         
         return tokenResponseModel;
     }
 
     public Task<ResponseModel> Logout()
     {
-        httpContext?.Response.Cookies.Delete("secret-cookies"); 
+        httpContextAccessor.HttpContext?.Response.Cookies.Delete("secret-cookies"); 
 
         return Task.FromResult(new ResponseModel(null, "Logout successful"));
     }

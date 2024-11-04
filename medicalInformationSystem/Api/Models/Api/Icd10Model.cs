@@ -13,7 +13,7 @@ public class Icd10Model
     
     [JsonPropertyName("ID")]
     public int idInt { get; set; }
-    public Guid? idGuid { get; set; } = null;
+    public Guid idGuid { get; set; }
     
     [JsonPropertyName("ID_PARENT")]
     public string? idParent { get; set; }

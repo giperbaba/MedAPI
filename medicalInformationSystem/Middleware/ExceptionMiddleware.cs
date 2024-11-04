@@ -28,6 +28,10 @@ namespace medicalInformationSystem.Middleware
             {
                 await HandleExceptionAsync(context, HttpStatusCode.Unauthorized, ex.Message);
             }
+            catch (InvalidValuePageException ex)
+            {
+                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex.Message);
+            }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An unhandled exception occurred.");

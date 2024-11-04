@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using medicalInformationSystem.Api.Models.Api;
 using medicalInformationSystem.Configurations.Constants;
 using medicalInformationSystem.Model.Api;
 

@@ -1,7 +1,6 @@
 using medicalInformationSystem.Api.Models.Api;
 using medicalInformationSystem.Api.Models.Request;
 using medicalInformationSystem.Core.Services.Interfaces;
-using medicalInformationSystem.Models.Api;
 using medicalInformationSystem.Models.Request;
 using medicalInformationSystem.Models.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -24,9 +23,9 @@ public class DoctorController(IAuthService authService, IProfileService profileS
     
     [HttpPost("login")]
     [SwaggerOperation(Summary = "Login in to the system")]
-    public async Task<TokenResponseModel> Login(DoctorLoginModel doctorLoginModel)
+    public async Task<TokenResponseModel> Login(DoctorLoginModel loginUser)
     {
-        var token = await authService.Login(doctorLoginModel);
+        var token = await authService.Login(loginUser);
         return token;
     }
 

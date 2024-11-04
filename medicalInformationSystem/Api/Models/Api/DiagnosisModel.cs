@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using medicalInformationSystem.Configurations.Constants;
 using medicalInformationSystem.Enum;
 
-namespace medicalInformationSystem.Models.Api;
+namespace medicalInformationSystem.Api.Models.Api;
 
 public class DiagnosisModel
 {

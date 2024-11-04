@@ -9,7 +9,7 @@ using medicalInformationSystem.Models.Response;
 
 namespace medicalInformationSystem.Core.Services.Impls;
 
-public class ProfileService(
+public class DoctorProfileService(
     IDoctorRepository doctorRepository): IProfileService
 {
     public async Task<ResponseModel> EditProfile(DoctorEditModel doctorEditModel)

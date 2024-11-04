@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using medicalInformationSystem.Configurations.Constants;
-using medicalInformationSystem.Model.Api;
+using medicalInformationSystem.Models.Api;
 
-namespace medicalInformationSystem.Models.Api;
+namespace medicalInformationSystem.Api.Models.Api;
 
 public class ConsultationModel
 {

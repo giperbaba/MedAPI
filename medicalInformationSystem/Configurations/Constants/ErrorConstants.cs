@@ -34,4 +34,6 @@ namespace medicalInformationSystem.Configurations.Constants;
      public const string InvalidPasswordError = "Invalid password";
      
      public const string IncorrectDateError = "Date format is invalid";
+     
+     public const string InvalidValuePageError = "Invalid value for attribute page";
  }
