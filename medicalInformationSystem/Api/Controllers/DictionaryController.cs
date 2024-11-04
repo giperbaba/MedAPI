@@ -23,6 +23,11 @@ public class DictionaryController(IDictionaryService dictionaryService)
     {
         return await dictionaryService.GetIcd10PagedList(queryParameters);
     }
-    
-    
+
+    [HttpGet("icd10/roots")]
+    [SwaggerOperation(Summary = "Get root ICD-10 elements")]
+    public async Task<List<Icd10RecordModel>> GetIcd10Roots()
+    {
+        return await dictionaryService.GetIcd10Roots();
+    }
 }

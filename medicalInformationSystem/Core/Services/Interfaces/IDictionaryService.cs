@@ -8,5 +8,5 @@ public interface IDictionaryService
 {
     public Task<SpecialitiesPagedListModel> GetSpecialitiesPagedList(QueryParameters queryParameters);
     public Task<Icd10SearchModel> GetIcd10PagedList(QueryParameters queryParameters);
-    
+    public Task<List<Icd10RecordModel>> GetIcd10Roots();
 }

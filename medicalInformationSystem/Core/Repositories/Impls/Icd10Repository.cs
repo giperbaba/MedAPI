@@ -49,4 +49,11 @@ public class Icd10Repository(MedicalDataContext context) : IIcd10Repository
     {
         return await context.Icd10s.CountAsync();
     }
+
+    public async Task<List<Icd10>> GetIcd10Roots()
+    {
+        return await context.Icd10s
+            .Where(icd => icd.IdParentGuid == null)
+            .ToListAsync();
+    }
 }

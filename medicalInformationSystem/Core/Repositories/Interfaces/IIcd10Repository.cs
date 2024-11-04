@@ -14,4 +14,6 @@ public interface IIcd10Repository
     public Task<List<Icd10>> GetListIcd10(int skip, int take, string nameFilter);
 
     public Task<int> GetLength();
+    
+    public Task<List<Icd10>> GetIcd10Roots();
 }

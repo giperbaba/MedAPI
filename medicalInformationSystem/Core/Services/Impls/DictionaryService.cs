@@ -5,7 +5,7 @@ using medicalInformationSystem.Configurations.Constants;
 using medicalInformationSystem.Core.Mappers;
 using medicalInformationSystem.Core.Repositories.Interfaces;
 using medicalInformationSystem.Core.Services.Interfaces;
-
+using medicalInformationSystem.Data.Entities;
 using medicalInformationSystem.Exceptions;
 
 namespace medicalInformationSystem.Core.Services.Impls;
@@ -55,6 +55,19 @@ public class DictionaryService(ISpecialityRepository specialityRepository, IIcd1
         }
 
         return specialities;
+    }
+
+    public async Task<List<Icd10RecordModel>> GetIcd10Roots()
+    {
+        List<Icd10> icd10RootsEntities = await icd10Repository.GetIcd10Roots();
+        List<Icd10RecordModel> icd10RecordModels = new List<Icd10RecordModel>();
+
+        foreach (var entity in icd10RootsEntities)
+        {
+            icd10RecordModels.Add(Icd10Mapper.MapFromEntityToModel(entity));
+        }
+
+        return icd10RecordModels;
     }
     
     private async Task<List<Icd10RecordModel>> GetIcd10Records(QueryParameters queryParameters)
