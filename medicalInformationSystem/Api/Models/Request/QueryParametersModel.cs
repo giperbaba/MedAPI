@@ -1,6 +1,6 @@
 namespace medicalInformationSystem.Api.Models.Request;
 
-public class QueryParameters
+public class QueryParametersModel
 {
     public string Name { get; set; } = string.Empty;
     

@@ -12,11 +12,13 @@ public static class ServiceConfiguration
         services.AddScoped<IDoctorRepository, DoctorRepository>();
         services.AddScoped<IIcd10Repository, Icd10Repository>();
         services.AddScoped<ISpecialityRepository, SpecialityRepository>();
+        services.AddScoped<IPatientRepository, PatientRepository>();
         
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, DoctorAuthService>();
         services.AddScoped<IProfileService, DoctorProfileService>(); 
         services.AddScoped<IIcd10Service, Icd10Service>(); 
         services.AddScoped<IDictionaryService, DictionaryService>();
+        services.AddScoped<IPatientService, PatientService>();
     }
 }

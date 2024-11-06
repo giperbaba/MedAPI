@@ -13,9 +13,9 @@ public record DoctorModel(
     string Email,
     string Phone)
 {
+    [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     public Guid Id { get; set; } = Id;
-
-
+    
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     public DateTime CreateTime { get; set; } = CreateTime;
 

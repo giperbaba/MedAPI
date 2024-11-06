@@ -1,4 +1,5 @@
 using medicalInformationSystem.Data;
+using medicalInformationSystem.Data.DBcontext;
 using Microsoft.EntityFrameworkCore;
 
 namespace medicalInformationSystem.Configurations;

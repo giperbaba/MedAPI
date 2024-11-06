@@ -12,42 +12,42 @@ namespace medicalInformationSystem.Core.Services.Impls;
 
 public class DictionaryService(ISpecialityRepository specialityRepository, IIcd10Repository icd10Repository): IDictionaryService
 { 
-    public async Task<SpecialitiesPagedListModel> GetSpecialitiesPagedList(QueryParameters queryParameters)
+    public async Task<SpecialitiesPagedListModel> GetSpecialitiesPagedList(QueryParametersModel queryParametersModel)
     {
         int countSpecialities = await specialityRepository.GetLength();
         
-        if (queryParameters.GetSkip() > countSpecialities || queryParameters.Page > countSpecialities)
+        if (queryParametersModel.GetSkip() > countSpecialities || queryParametersModel.Page > countSpecialities)
             throw new InvalidValuePageException(ErrorConstants.InvalidValuePageError);
         
         
         var specialitiesPagedListModel = new SpecialitiesPagedListModel
         {
-            Specialties = await GetSpecialities(queryParameters),
-            Pagination = await GetPageInfo(queryParameters, countSpecialities)
+            Specialties = await GetSpecialities(queryParametersModel),
+            Pagination = await GetPageInfo(queryParametersModel, countSpecialities)
         };
 
         return specialitiesPagedListModel;
     }
 
-    public async Task<Icd10SearchModel> GetIcd10PagedList(QueryParameters queryParameters)
+    public async Task<Icd10SearchModel> GetIcd10PagedList(QueryParametersModel queryParametersModel)
     {
         int countIcd10 = await icd10Repository.GetLength();
 
-        if (queryParameters.GetSkip() > countIcd10 || queryParameters.Page > countIcd10)
+        if (queryParametersModel.GetSkip() > countIcd10 || queryParametersModel.Page > countIcd10)
             throw new InvalidValuePageException(ErrorConstants.InvalidValuePageError);
 
         var icd10PagedListModel = new Icd10SearchModel
         {
-            Records = await GetIcd10Records(queryParameters),
-            Pagination = await GetPageInfo(queryParameters, countIcd10)
+            Records = await GetIcd10Records(queryParametersModel),
+            Pagination = await GetPageInfo(queryParametersModel, countIcd10)
         };
 
         return icd10PagedListModel;
     }
 
-    private async Task<List<SpecialityModel>> GetSpecialities(QueryParameters queryParameters)
+    private async Task<List<SpecialityModel>> GetSpecialities(QueryParametersModel queryParametersModel)
     {
-        var listSpecialityEntities = await specialityRepository.GetListSpeciality(queryParameters.GetSkip(),queryParameters.Size, queryParameters.Name);
+        var listSpecialityEntities = await specialityRepository.GetListSpeciality(queryParametersModel.GetSkip(),queryParametersModel.Size, queryParametersModel.Name);
         List<SpecialityModel> specialities = new List<SpecialityModel>();
         foreach (var speciality in listSpecialityEntities)
         {
@@ -70,9 +70,9 @@ public class DictionaryService(ISpecialityRepository specialityRepository, IIcd1
         return icd10RecordModels;
     }
     
-    private async Task<List<Icd10RecordModel>> GetIcd10Records(QueryParameters queryParameters)
+    private async Task<List<Icd10RecordModel>> GetIcd10Records(QueryParametersModel queryParametersModel)
     {
-        var listIcd10Entities = await icd10Repository.GetListIcd10(queryParameters.GetSkip(), queryParameters.Size, queryParameters.Name);
+        var listIcd10Entities = await icd10Repository.GetListIcd10(queryParametersModel.GetSkip(), queryParametersModel.Size, queryParametersModel.Name);
         List<Icd10RecordModel> icd10Models = new List<Icd10RecordModel>();
 
         foreach (var icd10 in listIcd10Entities)
@@ -82,14 +82,14 @@ public class DictionaryService(ISpecialityRepository specialityRepository, IIcd1
         return icd10Models;
     }
 
-    private Task<PageInfoModel> GetPageInfo(QueryParameters queryParameters, int countSpecialities)
+    private Task<PageInfoModel> GetPageInfo(QueryParametersModel queryParametersModel, int countSpecialities)
     {
-        int countPages = (int)Math.Ceiling((double)countSpecialities / queryParameters.Size);
+        int countPages = (int)Math.Ceiling((double)countSpecialities / queryParametersModel.Size);
         var pageInfo = new PageInfoModel
         {
-            Size = queryParameters.Size,
+            Size = queryParametersModel.Size,
             Count = countPages,
-            Current = queryParameters.Page
+            Current = queryParametersModel.Page
         };
         return Task.FromResult(pageInfo);
     }

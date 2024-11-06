@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using medicalInformationSystem.Api.Models.Interfaces;
 using medicalInformationSystem.Configurations.Constants;
+using medicalInformationSystem.Data.Validator;
 using medicalInformationSystem.Enum;
-using medicalInformationSystem.Validator;
 
 namespace medicalInformationSystem.Api.Models.Request;
 
@@ -12,7 +13,7 @@ public class DoctorRegisterModel(
     DateTime birthday,
     Gender gender,
     string? phone,
-    Guid specialityId)
+    Guid specialityId): IRegistrableUser
 
 {
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
@@ -25,7 +26,7 @@ public class DoctorRegisterModel(
 
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [MinLength(1, ErrorMessage = ErrorConstants.EmailLengthError)]
-    [RegularExpression(pattern: RegexConstants.EmailRegex, ErrorMessage = ErrorConstants.EmailValidError)]
+    [DataType(DataType.EmailAddress, ErrorMessage = ErrorConstants.EmailValidError)]
     public string Email { get; set; } = email;
 
     [DatetimeValidator(ErrorMessage = ErrorConstants.IncorrectDateError)]

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using medicalInformationSystem.Configurations.Constants;
+using medicalInformationSystem.Data.Validator;
 using medicalInformationSystem.Enum;
-using medicalInformationSystem.Validator;
 using static medicalInformationSystem.Configurations.Constants.RegexConstants;
 
 namespace medicalInformationSystem.Models.Request;
@@ -19,7 +19,7 @@ public class DoctorEditModel
 
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [MinLength(1, ErrorMessage = ErrorConstants.EmailLengthError)]
-    [RegularExpression(pattern: RegexConstants.EmailRegex, ErrorMessage = ErrorConstants.EmailValidError)]
+    [DataType(DataType.EmailAddress, ErrorMessage = ErrorConstants.EmailValidError)]
     public string Email { get; set; }
     
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]

@@ -51,5 +51,5 @@ public class Doctor
 
     public Speciality Speciality { get; set; }
     
-    public List<Inspection> Inspections { get; set; } = new List<Inspection>();
+    public ICollection<Inspection> Inspections { get; set; } = new List<Inspection>();
 }

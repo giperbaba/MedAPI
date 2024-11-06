@@ -36,7 +36,7 @@ public class DoctorAuthService (
         return tokenResponseModel;
     }
 
-    public async Task<TokenResponseModel> Login(DoctorLoginModel user)
+    public async Task<TokenResponseModel> Login(LoginCredentialsModel user)
     {
         var userFromDb = await doctorRepository.GetDoctorByEmail(user.Email);
         

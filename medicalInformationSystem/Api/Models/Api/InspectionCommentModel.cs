@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using medicalInformationSystem.Api.Models.Api;
 using medicalInformationSystem.Configurations.Constants;
-using medicalInformationSystem.Models.Api;
 
-namespace medicalInformationSystem.Models.Api;
+namespace medicalInformationSystem.Api.Models.Api;
 
-public class IncpectionCommentModel
+public class InspectionCommentModel
 {
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     public Guid Id { get; set; }

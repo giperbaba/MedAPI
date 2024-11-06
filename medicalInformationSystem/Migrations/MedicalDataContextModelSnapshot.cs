@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using medicalInformationSystem.Data;
+using medicalInformationSystem.Data.DBcontext;
 
 #nullable disable
 
@@ -75,7 +75,7 @@ namespace medicalInformationSystem.Migrations
 
             modelBuilder.Entity("medicalInformationSystem.Data.Entities.Icd10", b =>
                 {
-                    b.Property<Guid?>("IdGuid")
+                    b.Property<Guid>("IdGuid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id_guid");
@@ -101,17 +101,14 @@ namespace medicalInformationSystem.Migrations
                         .HasColumnName("id_parent_guid");
 
                     b.Property<string>("McbCode")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("MKB_CODE");
 
                     b.Property<string>("McbName")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("MKB_NAME");
 
                     b.Property<string>("RecCode")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("REC_CODE");
 
@@ -120,28 +117,7 @@ namespace medicalInformationSystem.Migrations
                     b.ToTable("Icd10");
                 });
 
-            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Speciality", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreateTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("create_time");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Specialities");
-                });
-
-            modelBuilder.Entity("medicalInformationSystem.Entities.Inspection", b =>
+            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Inspection", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -188,6 +164,9 @@ namespace medicalInformationSystem.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("next_visit_date");
 
+                    b.Property<Guid?>("PatientId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid?>("PreviousInspectionId")
                         .HasColumnType("uuid")
                         .HasColumnName("previous_inspection_id");
@@ -202,7 +181,63 @@ namespace medicalInformationSystem.Migrations
 
                     b.HasIndex("DoctorId");
 
+                    b.HasIndex("PatientId");
+
                     b.ToTable("Inspections");
+                });
+
+            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Patient", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime?>("Birthday")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("birthday");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("create_time");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("doctor_id");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer")
+                        .HasColumnName("gender");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Speciality", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("create_time");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Specialities");
                 });
 
             modelBuilder.Entity("medicalInformationSystem.Data.Entities.Doctor", b =>
@@ -216,7 +251,7 @@ namespace medicalInformationSystem.Migrations
                     b.Navigation("Speciality");
                 });
 
-            modelBuilder.Entity("medicalInformationSystem.Entities.Inspection", b =>
+            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Inspection", b =>
                 {
                     b.HasOne("medicalInformationSystem.Data.Entities.Doctor", "Doctor")
                         .WithMany("Inspections")
@@ -224,10 +259,19 @@ namespace medicalInformationSystem.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("medicalInformationSystem.Data.Entities.Patient", null)
+                        .WithMany("Inspections")
+                        .HasForeignKey("PatientId");
+
                     b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("medicalInformationSystem.Data.Entities.Doctor", b =>
+                {
+                    b.Navigation("Inspections");
+                });
+
+            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Patient", b =>
                 {
                     b.Navigation("Inspections");
                 });

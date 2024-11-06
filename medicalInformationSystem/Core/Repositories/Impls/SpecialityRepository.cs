@@ -1,5 +1,6 @@
 using medicalInformationSystem.Core.Repositories.Interfaces;
 using medicalInformationSystem.Data;
+using medicalInformationSystem.Data.DBcontext;
 using medicalInformationSystem.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 

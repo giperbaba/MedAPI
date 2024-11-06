@@ -34,7 +34,7 @@ public class DoctorProfileService(
     public async Task<DoctorModel> GetProfile(Guid doctorId)
     {
         var doctor = await doctorRepository.GetDoctorById(doctorId);
-        
+                          
         if (doctor is null)
         {
             throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);

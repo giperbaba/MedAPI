@@ -1,14 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using medicalInformationSystem.Configurations.Constants;
-using medicalInformationSystem.Models.Request;
 
 namespace medicalInformationSystem.Api.Models.Request;
 
-public class ConsultationCreateModel(InspectionCommentCreateModel comment)
+public class LoginCredentialsModel(string email, string password)
 {
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
-    public Guid SpecialityId { get; set; }
-    
+    [DataType(DataType.EmailAddress, ErrorMessage = ErrorConstants.EmailValidError)]
+    public string Email { get; set; } = email;
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
-    public InspectionCommentCreateModel Comment { get; set; } = comment;
+    public string Password { get; set; } = password;
 }

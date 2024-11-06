@@ -11,7 +11,7 @@ namespace medicalInformationSystem.Api.Controllers;
 
 [ApiController]
 [Route("api/doctor")]
-public class DoctorController(IAuthService authService, IProfileService profileService) : ControllerBase
+public class DoctorController(IAuthService authService, IProfileService profileService) : BaseController
 {
     [HttpPost("register")]
     [SwaggerOperation(Summary = "Register new user")]
@@ -23,9 +23,9 @@ public class DoctorController(IAuthService authService, IProfileService profileS
     
     [HttpPost("login")]
     [SwaggerOperation(Summary = "Login in to the system")]
-    public async Task<TokenResponseModel> Login(DoctorLoginModel loginUser)
+    public async Task<TokenResponseModel> Login(LoginCredentialsModel loginCredentialsUser)
     {
-        var token = await authService.Login(loginUser);
+        var token = await authService.Login(loginCredentialsUser);
         return token;
     }
 
@@ -50,22 +50,5 @@ public class DoctorController(IAuthService authService, IProfileService profileS
     public async Task<ResponseModel> EditProfile(DoctorEditModel doctorEditModel)
     {
         return await profileService.EditProfile(doctorEditModel);
-    }
-    
-    private Guid GetDoctorId()
-    {
-        var doctorIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "doctorId");
-
-        if (doctorIdClaim == null)
-        {
-            throw new UnauthorizedAccessException();
-        }
-
-        if (!Guid.TryParse(doctorIdClaim.Value, out var doctorId))
-        {
-            throw new InvalidOperationException("Invalid Doctor ID.");
-        }
-
-        return doctorId;
     }
 }

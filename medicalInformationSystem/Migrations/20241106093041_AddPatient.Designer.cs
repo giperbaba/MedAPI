@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using medicalInformationSystem.Data;
 using medicalInformationSystem.Data.DBcontext;
 
 #nullable disable
@@ -13,8 +12,8 @@ using medicalInformationSystem.Data.DBcontext;
 namespace medicalInformationSystem.Migrations
 {
     [DbContext(typeof(MedicalDataContext))]
-    [Migration("20241103093633_UpdateIcd10")]
-    partial class UpdateIcd10
+    [Migration("20241106093041_AddPatient")]
+    partial class AddPatient
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,7 +78,7 @@ namespace medicalInformationSystem.Migrations
 
             modelBuilder.Entity("medicalInformationSystem.Data.Entities.Icd10", b =>
                 {
-                    b.Property<Guid?>("IdGuid")
+                    b.Property<Guid>("IdGuid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id_guid");
@@ -105,17 +104,14 @@ namespace medicalInformationSystem.Migrations
                         .HasColumnName("id_parent_guid");
 
                     b.Property<string>("McbCode")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("MKB_CODE");
 
                     b.Property<string>("McbName")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("MKB_NAME");
 
                     b.Property<string>("RecCode")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("REC_CODE");
 
@@ -124,7 +120,7 @@ namespace medicalInformationSystem.Migrations
                     b.ToTable("Icd10");
                 });
 
-            modelBuilder.Entity("medicalInformationSystem.Entities.Inspection", b =>
+            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Inspection", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -171,6 +167,9 @@ namespace medicalInformationSystem.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("next_visit_date");
 
+                    b.Property<Guid?>("PatientId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid?>("PreviousInspectionId")
                         .HasColumnType("uuid")
                         .HasColumnName("previous_inspection_id");
@@ -185,10 +184,45 @@ namespace medicalInformationSystem.Migrations
 
                     b.HasIndex("DoctorId");
 
+                    b.HasIndex("PatientId");
+
                     b.ToTable("Inspections");
                 });
 
-            modelBuilder.Entity("medicalInformationSystem.Entities.Speciality", b =>
+            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Patient", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime?>("Birthday")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("birthday");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("create_time");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("doctor_id");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer")
+                        .HasColumnName("gender");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Speciality", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -211,7 +245,7 @@ namespace medicalInformationSystem.Migrations
 
             modelBuilder.Entity("medicalInformationSystem.Data.Entities.Doctor", b =>
                 {
-                    b.HasOne("medicalInformationSystem.Entities.Speciality", "Speciality")
+                    b.HasOne("medicalInformationSystem.Data.Entities.Speciality", "Speciality")
                         .WithMany("Doctors")
                         .HasForeignKey("SpecialityId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -220,13 +254,17 @@ namespace medicalInformationSystem.Migrations
                     b.Navigation("Speciality");
                 });
 
-            modelBuilder.Entity("medicalInformationSystem.Entities.Inspection", b =>
+            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Inspection", b =>
                 {
                     b.HasOne("medicalInformationSystem.Data.Entities.Doctor", "Doctor")
                         .WithMany("Inspections")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("medicalInformationSystem.Data.Entities.Patient", null)
+                        .WithMany("Inspections")
+                        .HasForeignKey("PatientId");
 
                     b.Navigation("Doctor");
                 });
@@ -236,7 +274,12 @@ namespace medicalInformationSystem.Migrations
                     b.Navigation("Inspections");
                 });
 
-            modelBuilder.Entity("medicalInformationSystem.Entities.Speciality", b =>
+            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Patient", b =>
+                {
+                    b.Navigation("Inspections");
+                });
+
+            modelBuilder.Entity("medicalInformationSystem.Data.Entities.Speciality", b =>
                 {
                     b.Navigation("Doctors");
                 });
