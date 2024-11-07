@@ -1,12 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using medicalInformationSystem.Api.Models.Api;
 using medicalInformationSystem.Api.Models.Request;
 using medicalInformationSystem.Configurations.Constants;
+using medicalInformationSystem.Data.Enum;
 using medicalInformationSystem.Enum;
-using medicalInformationSystem.Models.Api;
-using medicalInformationSystem.Models.Request;
 
-namespace medicalInformationSystem.Model.Api;
+namespace medicalInformationSystem.Api.Models.Api;
 
 public class InspectionModel
 {
@@ -19,18 +17,14 @@ public class InspectionModel
     public DateTime Date { get; set; }
     
     [StringLength(5000, MinimumLength = 1, ErrorMessage = ErrorConstants.InspectionAnamnesisLengthError)]
-    [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
-    public string Anamnesis { get; set; }
+    public string? Anamnesis { get; set; }
     
-    [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [StringLength(5000, MinimumLength = 1, ErrorMessage = ErrorConstants.InspectionComplaintsLengthError)]
-    public string Complaints { get; set; }
+    public string? Complaints { get; set; }
     
-    [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [StringLength(5000, MinimumLength = 1, ErrorMessage = ErrorConstants.InspectionTreatmentLengthError)]
-    public string Treatment { get; set; }
+    public string? Treatment { get; set; }
     
-    [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [EnumDataType(typeof(Conclusion))]
     public Conclusion Conclusion { get; set; }
     
@@ -50,5 +44,5 @@ public class InspectionModel
     
     public List<DiagnosisCreateModel> Diagnoses { get; set; }
     
-    public List<ConsultationCreateModel?> Consultations { get; set; }
+    public List<InspectionConsultationModel?> Consultations { get; set; }
 }

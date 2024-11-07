@@ -1,5 +1,4 @@
 using medicalInformationSystem.Core.Repositories.Interfaces;
-using medicalInformationSystem.Data;
 using medicalInformationSystem.Data.DBcontext;
 using medicalInformationSystem.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +13,11 @@ public class Icd10Repository(MedicalDataContext context) : IIcd10Repository
     {
         await context.Icd10s.AddAsync(icd10);
         await context.SaveChangesAsync();
+    }
+    
+    public async Task<Icd10> GetByIdGuidAsync(Guid id)
+    {
+        return await context.Icd10s.FirstOrDefaultAsync(e => e.IdGuid == id);
     }
 
     public async Task<Icd10> GetByIdInt(string id)

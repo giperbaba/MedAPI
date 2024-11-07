@@ -20,11 +20,16 @@ public class PatientController(IPatientService patientService): BaseController
         Guid patientId = await patientService.Register(patientRegisterModel, doctorIdWhoRegistered);
         return patientId;
     }
-    
-    [HttpPost]
+
+    [HttpPost("{id}/inspections")]
     [SwaggerOperation(Summary = "Create inspection for specified patient")]
     [Authorize]
-    public async Task<>
+    public async Task<Guid> CreateInspection(Guid id, InspectionCreateModel inspectionCreateModel)
+    {
+        Guid doctorIdWhoRegistered = GetDoctorId();
+        Guid inspectionId = await patientService.CreateInspection(inspectionCreateModel, doctorIdWhoRegistered, id);
+        return inspectionId;
+    }
 
     [HttpGet("{id}")]
     [SwaggerOperation(Summary = "Get patient card")]

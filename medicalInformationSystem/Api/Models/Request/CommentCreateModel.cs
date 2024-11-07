@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using medicalInformationSystem.Configurations.Constants;
 
-namespace medicalInformationSystem.Models.Request;
+namespace medicalInformationSystem.Api.Models.Request;
 
 public class CommentCreateModel
 {

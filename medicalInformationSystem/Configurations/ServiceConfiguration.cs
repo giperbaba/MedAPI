@@ -2,6 +2,7 @@ using medicalInformationSystem.Core.Repositories.Impls;
 using medicalInformationSystem.Core.Repositories.Interfaces;
 using medicalInformationSystem.Core.Services.Impls;
 using medicalInformationSystem.Core.Services.Interfaces;
+using medicalInformationSystem.Data.Validator;
 
 namespace medicalInformationSystem.Configurations;
 
@@ -13,6 +14,9 @@ public static class ServiceConfiguration
         services.AddScoped<IIcd10Repository, Icd10Repository>();
         services.AddScoped<ISpecialityRepository, SpecialityRepository>();
         services.AddScoped<IPatientRepository, PatientRepository>();
+        services.AddScoped<IConsultationRepository, ConsultationRepository>();
+        services.AddScoped<IDiagnosisRepository, DiagnosisRepository>();
+        services.AddScoped<IInspectionRepository, InspectionRepository>();
         
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, DoctorAuthService>();

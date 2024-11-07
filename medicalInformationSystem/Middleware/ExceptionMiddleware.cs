@@ -32,6 +32,18 @@ namespace medicalInformationSystem.Middleware
             {
                 await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex.Message);
             }
+            catch (InvalidDatetimeException ex)
+            {
+                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex.Message);
+            }
+            catch (InvalidCountMainDiagnosesException ex)
+            {
+                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex.Message);
+            }
+            catch (DiagnosisNotFoundException ex)
+            {
+                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex.Message);
+            }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An unhandled exception occurred.");

@@ -39,4 +39,10 @@ public partial class MedicalDataContext : DbContext
     public DbSet<Icd10> Icd10s { get; set; } = null!;
     
     public DbSet<Patient> Patients { get; set; } = null!;
+    
+    public DbSet<Consultation> Consultations { get; set; } = null!;
+    
+    public DbSet<Diagnosis> Diagnoses { get; set; } = null!;
+    
+    public DbSet<Inspection> Inspections { get; set; } = null!;
 }

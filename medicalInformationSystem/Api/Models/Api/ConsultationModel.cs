@@ -16,5 +16,5 @@ public class ConsultationModel
 
     public SpecialityModel Speciality { get; set; }
 
-    public List<CommentModel> Comments { get; set; }
+    public ICollection<CommentModel> Comments { get; set; }
 }

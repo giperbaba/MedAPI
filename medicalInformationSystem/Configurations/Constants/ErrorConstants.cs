@@ -33,7 +33,17 @@ namespace medicalInformationSystem.Configurations.Constants;
      public const string ProfileNotFoundError = "User not found";
      public const string InvalidPasswordError = "Invalid password";
      
-     public const string IncorrectDateError = "Date format is invalid";
+     public const string IncorrectDateError = "Date is invalid";
      
      public const string InvalidValuePageError = "Invalid value for attribute page";
+     
+     public const string InvalidCountMainDiagnosesError = "Number of main diagnoses must be 1";
+     public const string DiagnosesNotFoundError = "Diagnoses not found";
+
+     public const string ConditionDatetimeOfDiseaseError = "If conclusion is disease must be next visit datetime";
+     public const string ConditionDatetimeOfDeathError = "If conclusion is death must be datetime of death";
+     public const string ConditionDatetimeOfRecoverError = "If conclusion is recovery mustn't be datetime of recover";
+     
+     public const string DuplicateSpecialityError = "Mustn't be several consultations with the same specialty doctor";
+     public const string InvalidPreviouslyInspectionError = "Previously inspection datetime is invalid";
  }
