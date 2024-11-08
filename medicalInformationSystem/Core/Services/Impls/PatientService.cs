@@ -93,11 +93,11 @@ public class PatientService(
         {
             if (diagnosis.Type == DiagnosisType.Main) mainDiagnosesCount++;
             if (mainDiagnosesCount > 1)
-                throw new InvalidCountMainDiagnosesException(ErrorConstants.InvalidCountMainDiagnosesError);
+                throw new InvalidCountMainDiagnosesException(ErrorConstants.DiagnosesInvalidCountMainError);
 
             var icdDiagnosis = await icd10Repository.GetByIdGuidAsync(diagnosis.IcdDiagnosisId);
             if (icdDiagnosis is null)
-                throw new DiagnosisNotFoundException(ErrorConstants.DiagnosesNotFoundError);
+                throw new DiagnosisNotFoundException(ErrorConstants.DiagnosisNotFoundError);
 
             var diagnosisEntity =
                 DiagnosesMapper.MapCreateModelToEntity(diagnosis, icdDiagnosis.McbCode, icdDiagnosis.McbName);
@@ -116,7 +116,7 @@ public class PatientService(
         foreach (var consult in inspection.Consultations)
         {
             if (!specialityIds.Add(consult.SpecialityId))
-                throw new DuplicateSpecialityException(ErrorConstants.DuplicateSpecialityError);
+                throw new DuplicateSpecialityException(ErrorConstants.SpecialityDuplicateError);
 
             var consultationEntity = ConsultationMapper.MapCreateModelToEntity(consult);
             consultations.Add(consultationEntity);
@@ -131,17 +131,17 @@ public class PatientService(
         {
             case Conclusion.Disease:
                 if (inspection.NextVisitDate is null || inspection.DeathDate is not null)
-                    throw new InvalidDatetimeException(ErrorConstants.ConditionDatetimeOfDiseaseError);
+                    throw new InvalidDatetimeException(ErrorConstants.PatientConditionDatetimeOfDiseaseError);
                 break;
 
             case Conclusion.Recovery:
                 if (inspection.NextVisitDate is not null || inspection.DeathDate is not null)
-                    throw new InvalidDatetimeException(ErrorConstants.ConditionDatetimeOfRecoverError);
+                    throw new InvalidDatetimeException(ErrorConstants.PatientConditionDatetimeOfRecoverError);
                 break;
 
             case Conclusion.Death:
                 if (inspection.NextVisitDate is not null || inspection.DeathDate is null)
-                    throw new InvalidDatetimeException(ErrorConstants.ConditionDatetimeOfDeathError);
+                    throw new InvalidDatetimeException(ErrorConstants.PatientConditionDatetimeOfDeathError);
                 break;
         }
     }

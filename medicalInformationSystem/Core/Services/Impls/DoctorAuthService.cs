@@ -50,7 +50,7 @@ public class DoctorAuthService (
         var isPasswordTrue = PasswordManager.Verify(user.Password, userFromDb.Password);
 
         if (!isPasswordTrue) {
-            throw new InvalidPasswordException(ErrorConstants.InvalidPasswordError);
+            throw new InvalidPasswordException(ErrorConstants.PasswordFalseError);
         }
 
         var token = tokenService.GenerateAccessToken(userFromDb);
