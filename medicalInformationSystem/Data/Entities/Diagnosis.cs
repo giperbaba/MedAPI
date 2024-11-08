@@ -8,6 +8,7 @@ namespace medicalInformationSystem.Data.Entities;
 [Table("Diagnosis")]
 public class Diagnosis
 {
+    [Key]
     [Column("id")]
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     public Guid Id { get; set; }

@@ -1,3 +1,4 @@
+using medicalInformationSystem.Api.Models.Api;
 using medicalInformationSystem.Api.Models.Request;
 using medicalInformationSystem.Data.Entities;
 
@@ -16,6 +17,19 @@ public static class DiagnosesMapper
             Description = diagnosisCreateModel.Description,
             Type = diagnosisCreateModel.Type,
             DiagnosisIcd10Id = diagnosisCreateModel.IcdDiagnosisId,
+        };
+    }
+
+    public static DiagnosisModel MapEntityToModel(Diagnosis diagnosis)
+    {
+        return new DiagnosisModel
+        {
+            Id = diagnosis.Id,
+            CreateTime = diagnosis.CreateTime,
+            Code = diagnosis.Code,
+            Description = diagnosis.Description,
+            Name = diagnosis.Name,
+            Type = diagnosis.Type
         };
     }
 }

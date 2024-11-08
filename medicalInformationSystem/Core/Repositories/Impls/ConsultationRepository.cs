@@ -12,4 +12,6 @@ public class ConsultationRepository(MedicalDataContext context) : IConsultationR
         await context.Consultations.AddAsync(consultation);
         await context.SaveChangesAsync();
     }
+    
+    public async Task<Consultation?> GetById(Guid id) => await context.Consultations.FindAsync(id);
 }

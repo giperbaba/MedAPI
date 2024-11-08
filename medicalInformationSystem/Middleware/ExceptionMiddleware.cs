@@ -42,11 +42,11 @@ namespace medicalInformationSystem.Middleware
             }
             catch (DiagnosisNotFoundException ex)
             {
-                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex.Message);
+                await HandleExceptionAsync(context, HttpStatusCode.NotFound, ex.Message);
             }
             catch (InspectionNotFoundException ex)
             {
-                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex.Message);
+                await HandleExceptionAsync(context, HttpStatusCode.NotFound, ex.Message);
             }
             catch (PatientIsAlreadyDeadException ex)
             {
@@ -54,7 +54,11 @@ namespace medicalInformationSystem.Middleware
             }
             catch (DuplicateSpecialityException ex)
             {
-                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex.Message);   
+                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex.Message);
+            }
+            catch (ConsultationNotFoundException ex)
+            {
+                await HandleExceptionAsync(context, HttpStatusCode.NotFound, ex.Message);
             }
             catch (Exception ex)
             {

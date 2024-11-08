@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using medicalInformationSystem.Configurations.Constants;
-using medicalInformationSystem.Models.Api;
 
 namespace medicalInformationSystem.Api.Models.Api;
 
@@ -10,11 +9,11 @@ public class ConsultationModel
     public Guid Id { get; set; }
 
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
-    private DateTime CreateTime { get; set; }
+    public DateTime CreateTime { get; set; }
 
     public Guid InspectionId { get; set; }
 
     public SpecialityModel Speciality { get; set; }
 
-    public ICollection<CommentModel> Comments { get; set; }
+    public string Comment { get; set; }
 }

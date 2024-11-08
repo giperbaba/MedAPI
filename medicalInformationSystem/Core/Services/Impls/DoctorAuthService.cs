@@ -26,10 +26,10 @@ public class DoctorAuthService (
         
         var newDoctor = DoctorMapper.MapFromRegisterModelToEntity(user, PasswordManager.Generate(user.Password));
 
-        await doctorRepository.Add(newDoctor);
-            
         var token = tokenService.GenerateAccessToken(newDoctor);
         var tokenResponseModel = new TokenResponseModel(token);
+        
+        await doctorRepository.Add(newDoctor);
         
         httpContextAccessor.HttpContext?.Response.Cookies.Append("secret-cookies", token);
             

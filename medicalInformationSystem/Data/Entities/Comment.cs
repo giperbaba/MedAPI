@@ -7,6 +7,7 @@ namespace medicalInformationSystem.Data.Entities;
 [Table("Comment")]
 public class Comment
 {
+    [Key]
     [Column("id")]
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     public Guid? Id { get; set; }

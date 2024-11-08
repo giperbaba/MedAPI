@@ -2,6 +2,7 @@ using medicalInformationSystem.Api.Models.Api;
 using medicalInformationSystem.Api.Models.Request;
 using medicalInformationSystem.Configurations.Constants;
 using medicalInformationSystem.Core.Mappers;
+using medicalInformationSystem.Core.Repositories.Impls;
 using medicalInformationSystem.Core.Repositories.Interfaces;
 using medicalInformationSystem.Core.Services.Interfaces;
 using medicalInformationSystem.Data.Entities;
@@ -29,10 +30,7 @@ public class PatientService(
     {
         Patient patient = await patientRepository.GetPatientById(patientId);
 
-        if (patient is null)
-        {
-            throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);
-        }
+        if (patient is null) throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);
 
         return PatientMapper.MapEntityToModel(patient);
     }
@@ -42,36 +40,60 @@ public class PatientService(
     {
         if (await patientRepository.GetPatientById(patientId) is null)
             throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);
-        
+
         ValidateInspectionNextVisitDate(inspection);
         await ValidatePreviousInspection(inspection, patientId);
-        
+
         Inspection inspectionEntity = InspectionMapper.MapCreateModelToEntity(inspection);
         inspectionEntity.DoctorId = doctorIdWhoRegistered;
         inspectionEntity.PatientId = patientId;
-        
-        CheckConclusionValidity(inspectionEntity, patientId);
-        
-        if (await patientRepository.IsPatientDead(patientId)) 
+
+        CheckConclusionValidity(inspectionEntity);
+
+        if (await patientRepository.IsPatientDead(patientId))
             throw new PatientIsAlreadyDeadException(ErrorConstants.PatientIsAlreadyDeadError);
-        
+
         var diagnoses = await PrepareDiagnoses(inspection);
         var consultations = PrepareConsultations(inspection);
-        
+
         inspectionEntity.BasePreviousInspectionId =
             await inspectionRepository.GetLastGeneralInspectionForPatient(patientId);
-        
+
         await AddAllToDatabase(inspectionEntity, consultations, diagnoses);
 
         return inspectionEntity.Id;
     }
-    
+
+    public async Task<ICollection<InspectionShortModel>> SearchInspections(Guid id, string request)
+    {
+        if (await patientRepository.GetPatientById(id) is null)
+            throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);
+
+        ICollection<InspectionShortModel> inspectionsEntity = new List<InspectionShortModel>();
+        ICollection<Inspection> inspections =
+            await inspectionRepository.GetInspectionsWithoutChildForPatient(id, request);
+
+        foreach (Inspection inspection in inspections)
+        {
+            Diagnosis mainDiagnosis = inspection.Diagnoses.FirstOrDefault(d => d.Type == DiagnosisType.Main);
+
+            if (mainDiagnosis.Code.Contains(request, StringComparison.OrdinalIgnoreCase) ||
+                mainDiagnosis.Name.Contains(request, StringComparison.OrdinalIgnoreCase))
+            {
+                DiagnosisModel diagnosisModel = DiagnosesMapper.MapEntityToModel(mainDiagnosis);
+                inspectionsEntity.Add(InspectionMapper.MapEntityToShortModel(inspection, diagnosisModel));
+            }
+        }
+
+        return inspectionsEntity;
+    }
+
     private void ValidateInspectionNextVisitDate(InspectionCreateModel inspection)
     {
         if (inspection.NextVisitDate.HasValue && inspection.NextVisitDate.Value < DateTime.Now)
             throw new InvalidDatetimeException(ErrorConstants.IncorrectDateError);
     }
-    
+
     private async Task ValidatePreviousInspection(InspectionCreateModel inspection, Guid patientId)
     {
         if (inspection.PreviousInspectionId is not null)
@@ -83,7 +105,7 @@ public class PatientService(
                 throw new InvalidDatetimeException(ErrorConstants.InvalidPreviouslyInspectionError);
         }
     }
-    
+
     private async Task<ICollection<Diagnosis>> PrepareDiagnoses(InspectionCreateModel inspection)
     {
         int mainDiagnosesCount = 0;
@@ -106,11 +128,11 @@ public class PatientService(
 
         return diagnoses;
     }
-    
+
     private ICollection<Consultation> PrepareConsultations(InspectionCreateModel inspection)
     {
         var consultations = new List<Consultation>();
-        
+
         var specialityIds = new HashSet<Guid>();
 
         foreach (var consult in inspection.Consultations)
@@ -124,8 +146,8 @@ public class PatientService(
 
         return consultations;
     }
-    
-    private async void CheckConclusionValidity(Inspection inspection, Guid patientId)
+
+    private void CheckConclusionValidity(Inspection inspection)
     {
         switch (inspection.Conclusion)
         {
@@ -145,12 +167,12 @@ public class PatientService(
                 break;
         }
     }
-    
+
     private async Task AddAllToDatabase(Inspection inspectionEntity, ICollection<Consultation> consultations,
         ICollection<Diagnosis> diagnoses)
     {
         await inspectionRepository.Add(inspectionEntity);
-        
+
         foreach (var diagnosis in diagnoses)
         {
             diagnosis.InspectionId = inspectionEntity.Id;

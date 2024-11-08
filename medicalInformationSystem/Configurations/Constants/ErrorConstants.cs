@@ -47,4 +47,7 @@ public static class ErrorConstants
     public const string PatientConditionDatetimeOfDiseaseError = "If conclusion is disease, must be next visit datetime and mustn't be death datetime";
     public const string PatientConditionDatetimeOfDeathError = "If conclusion is death, must be datetime of death and mustn't be next visit datetime";
     public const string PatientConditionDatetimeOfRecoverError = "If conclusion is recovery, mustn't be next visit and death datetime";
+    
+    //consultation
+    public const string ConsultationNotFoundError = "Consultation not found";
 }

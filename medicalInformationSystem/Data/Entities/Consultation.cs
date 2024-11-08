@@ -7,6 +7,7 @@ namespace medicalInformationSystem.Data.Entities;
 [Table("Consultation")]
 public class Consultation
 {
+    [Key]
     [Column("id")]
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     public Guid Id { get; set; }

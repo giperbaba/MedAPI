@@ -4,15 +4,16 @@ using medicalInformationSystem.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using medicalInformationSystem.Configurations.Constants;
 
 namespace medicalInformationSystem.Api.Controllers;
 
 [ApiController]
 [Route("api/patient")]
-public class PatientController(IPatientService patientService): BaseController
+public class PatientController(IPatientService patientService) : BaseController
 {
     [HttpPost]
-    [SwaggerOperation(Summary = "Create new patient")]
+    [SwaggerOperation(Summary = SwaggerOperationConstants.PatientCreate)]
     [Authorize]
     public async Task<Guid> Register(PatientRegisterModel patientRegisterModel)
     {
@@ -22,7 +23,7 @@ public class PatientController(IPatientService patientService): BaseController
     }
 
     [HttpPost("{id}/inspections")]
-    [SwaggerOperation(Summary = "Create inspection for specified patient")]
+    [SwaggerOperation(Summary = SwaggerOperationConstants.PatientCreateInspection)]
     [Authorize]
     public async Task<Guid> CreateInspection(Guid id, InspectionCreateModel inspectionCreateModel)
     {
@@ -32,10 +33,18 @@ public class PatientController(IPatientService patientService): BaseController
     }
 
     [HttpGet("{id}")]
-    [SwaggerOperation(Summary = "Get patient card")]
+    [SwaggerOperation(Summary = SwaggerOperationConstants.PatientGetCard)]
     [Authorize]
     public async Task<PatientModel> GetPatientCard(Guid id)
     {
         return await patientService.GetPatientById(id);
+    }
+    
+    [HttpGet("{id}/inspections/search")]
+    [SwaggerOperation(Summary = SwaggerOperationConstants.PatientSearchInspection)]
+    [Authorize]
+    public async Task<ICollection<InspectionShortModel>> SearchInspections(Guid id, [FromQuery] string request = "")
+    {
+        return await patientService.SearchInspections(id, request);
     }
 }

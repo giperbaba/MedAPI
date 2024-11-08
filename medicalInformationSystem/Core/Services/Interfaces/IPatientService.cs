@@ -10,4 +10,6 @@ public interface IPatientService
     public Task<PatientModel> GetPatientById(Guid patientId);
     
     public Task<Guid> CreateInspection(InspectionCreateModel inspection, Guid doctorIdWhoRegistered, Guid patientId);
+
+    public Task<ICollection<InspectionShortModel>> SearchInspections(Guid id, string request);
 }

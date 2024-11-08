@@ -28,7 +28,6 @@ public class JwtConfiguration
                     OnMessageReceived = context =>
                     {
                         context.Token = context.Request.Cookies["secret-cookies"];
-
                         return Task.CompletedTask;
                     }
                 };

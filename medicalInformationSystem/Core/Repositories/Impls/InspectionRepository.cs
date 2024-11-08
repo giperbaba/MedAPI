@@ -1,6 +1,7 @@
 using medicalInformationSystem.Core.Repositories.Interfaces;
 using medicalInformationSystem.Data.DBcontext;
 using medicalInformationSystem.Data.Entities;
+using medicalInformationSystem.Enum;
 using Microsoft.EntityFrameworkCore;
 
 namespace medicalInformationSystem.Core.Repositories.Impls;
@@ -21,5 +22,13 @@ public class InspectionRepository(MedicalDataContext context): IInspectionReposi
             .FirstOrDefaultAsync(); 
     
         return lastInspection?.Id;
+    }
+
+    public async Task<ICollection<Inspection>> GetInspectionsWithoutChildForPatient(Guid patientId, string filter)
+    {
+        return await context.Inspections
+            .Where(i => i.PatientId == patientId || i.PreviousInspectionId == null)
+            .Include(i => i.Diagnoses.Where(d => d.Type == DiagnosisType.Main))  
+            .ToListAsync();
     }
 }

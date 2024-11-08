@@ -6,6 +6,7 @@ using medicalInformationSystem.Models.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using medicalInformationSystem.Configurations.Constants;
 
 namespace medicalInformationSystem.Api.Controllers;
 
@@ -14,15 +15,15 @@ namespace medicalInformationSystem.Api.Controllers;
 public class DoctorController(IAuthService authService, IProfileService profileService) : BaseController
 {
     [HttpPost("register")]
-    [SwaggerOperation(Summary = "Register new user")]
+    [SwaggerOperation(Summary = SwaggerOperationConstants.UserRegister)]
     public async Task<TokenResponseModel> Register(DoctorRegisterModel doctorRegisterModel)
     {
         var token = await authService.Register(doctorRegisterModel);
         return token;
     }
-    
+
     [HttpPost("login")]
-    [SwaggerOperation(Summary = "Login in to the system")]
+    [SwaggerOperation(Summary = SwaggerOperationConstants.UserLogin)]
     public async Task<TokenResponseModel> Login(LoginCredentialsModel loginCredentialsUser)
     {
         var token = await authService.Login(loginCredentialsUser);
@@ -30,22 +31,22 @@ public class DoctorController(IAuthService authService, IProfileService profileS
     }
 
     [HttpPost("logout")]
-    [SwaggerOperation(Summary = "Log out system user")]
+    [SwaggerOperation(Summary = SwaggerOperationConstants.UserLogout)]
     public async Task<ResponseModel> Logout()
     {
         return await authService.Logout();
     }
-    
+
     [HttpGet("profile")]
-    [SwaggerOperation(Summary = "Get user profile")]
+    [SwaggerOperation(Summary = SwaggerOperationConstants.UserGetProfile)]
     [Authorize]
     public async Task<DoctorModel> GetProfile()
     {
         return await profileService.GetProfile(GetDoctorId());
     }
-    
+
     [HttpPut("profile")]
-    [SwaggerOperation(Summary = "Edit user profile")]
+    [SwaggerOperation(Summary = SwaggerOperationConstants.UserEditProfile)]
     [Authorize]
     public async Task<ResponseModel> EditProfile(DoctorEditModel doctorEditModel)
     {

@@ -1,3 +1,4 @@
+using medicalInformationSystem.Api.Models.Api;
 using medicalInformationSystem.Api.Models.Request;
 using medicalInformationSystem.Data.Entities;
 
@@ -21,6 +22,17 @@ public static class InspectionMapper
 
             DeathDate = inspectionCreateModel.DeathDate,
             PreviousInspectionId = inspectionCreateModel.PreviousInspectionId,
+        };
+    }
+
+    public static InspectionShortModel MapEntityToShortModel(Inspection inspection, DiagnosisModel mainDiagnosis)
+    {
+        return new InspectionShortModel
+        {
+            Id = inspection.Id,
+            CreateTime = inspection.CreateTime,
+            Date = inspection.Date,
+            Diagnosis = mainDiagnosis
         };
     }
 }
