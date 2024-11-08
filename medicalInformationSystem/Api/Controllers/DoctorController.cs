@@ -32,6 +32,7 @@ public class DoctorController(IAuthService authService, IProfileService profileS
 
     [HttpPost("logout")]
     [SwaggerOperation(Summary = SwaggerOperationConstants.UserLogout)]
+    [Authorize]
     public async Task<ResponseModel> Logout()
     {
         return await authService.Logout();

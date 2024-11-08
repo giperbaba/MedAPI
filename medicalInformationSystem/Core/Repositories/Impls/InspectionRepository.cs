@@ -26,6 +26,13 @@ public class InspectionRepository(MedicalDataContext context): IInspectionReposi
 
     public async Task<ICollection<Inspection>> GetInspectionsWithoutChildForPatient(Guid patientId, string filter)
     {
+        bool patientHasInspections = await context.Inspections
+            .AnyAsync(i => i.PatientId == patientId);
+        
+        if (!patientHasInspections)
+        {
+            return new List<Inspection>();
+        }
         return await context.Inspections
             .Where(i => i.PatientId == patientId || i.PreviousInspectionId == null)
             .Include(i => i.Diagnoses.Where(d => d.Type == DiagnosisType.Main))  
