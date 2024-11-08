@@ -26,11 +26,7 @@ public class InspectionCreateModel
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [EnumDataType(typeof(Conclusion))]
     public Conclusion Conclusion { get; set; }
-
-    //TODO: Date and time of the next visit in case of Disease conclusion (UTC)
     public DateTime? NextVisitDate { get; set; }
-
-    //TODO: Date and time of the death in case of Death conclusion (UTC)
     public DateTime? DeathDate { get; set; }
 
     public Guid? PreviousInspectionId { get; set; }

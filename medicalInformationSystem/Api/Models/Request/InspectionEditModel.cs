@@ -22,10 +22,8 @@ public class InspectionEditModel
     [EnumDataType(typeof(Conclusion))]
     public Conclusion Conclusion { get; set; }
     
-    //TODO: Date and time of the next visit in case of Disease conclusion (UTC)
     public DateTime? NextVisitDate { get; set; }
     
-    //TODO: Date and time of the death in case of Death conclusion (UTC)
     public DateTime? DeathDate { get; set; }
     
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]

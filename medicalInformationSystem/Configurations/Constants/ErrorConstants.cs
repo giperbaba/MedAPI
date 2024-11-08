@@ -40,10 +40,13 @@ namespace medicalInformationSystem.Configurations.Constants;
      public const string InvalidCountMainDiagnosesError = "Number of main diagnoses must be 1";
      public const string DiagnosesNotFoundError = "Diagnoses not found";
 
-     public const string ConditionDatetimeOfDiseaseError = "If conclusion is disease must be next visit datetime";
-     public const string ConditionDatetimeOfDeathError = "If conclusion is death must be datetime of death";
-     public const string ConditionDatetimeOfRecoverError = "If conclusion is recovery mustn't be datetime of recover";
+     public const string ConditionDatetimeOfDiseaseError = "If conclusion is disease must be next visit datetime and mustn't be death datetime";
+     public const string ConditionDatetimeOfDeathError = "If conclusion is death must be datetime of death and mustn't be next visit datetime";
+     public const string ConditionDatetimeOfRecoverError = "If conclusion is recovery mustn't be next visit and death datetime";
      
      public const string DuplicateSpecialityError = "Mustn't be several consultations with the same specialty doctor";
-     public const string InvalidPreviouslyInspectionError = "Previously inspection datetime is invalid";
+     public const string InvalidPreviouslyInspectionError = "Previously inspection datetime must be early than current";
+     
+     public const string InspectionNotFoundError = "Previously inspection not found";
+     public const string PatientIsAlreadyDeadError = "Patient is already dead";
  }

@@ -6,7 +6,6 @@ using medicalInformationSystem.Core.Repositories.Interfaces;
 using medicalInformationSystem.Core.Services.Interfaces;
 using medicalInformationSystem.Data.Entities;
 using medicalInformationSystem.Data.Enum;
-using medicalInformationSystem.Data.Validator;
 using medicalInformationSystem.Enum;
 using medicalInformationSystem.Exceptions;
 
@@ -41,82 +40,127 @@ public class PatientService(
     public async Task<Guid> CreateInspection(InspectionCreateModel inspection, Guid doctorIdWhoRegistered,
         Guid patientId)
     {
-        ICollection<Consultation> consultations = new List<Consultation>();
-        ICollection<Diagnosis> diagnoses = new List<Diagnosis>();
+        if (await patientRepository.GetPatientById(patientId) is null)
+            throw new ProfileNotFoundException(ErrorConstants.ProfileNotFoundError);
+        
+        ValidateInspectionNextVisitDate(inspection);
+        await ValidatePreviousInspection(inspection, patientId);
         
         Inspection inspectionEntity = InspectionMapper.MapCreateModelToEntity(inspection);
-
-        if (inspection.NextVisitDate.HasValue && inspection.NextVisitDate.Value < DateTime.Now) //следующий визит в прошедшем времени
-            throw new InvalidDatetimeException(ErrorConstants.IncorrectDateError);
-
-        if (inspection.PreviousInspectionId != null)
-        {
-            if (!await patientRepository.ExistsPreviousInspection(patientId, inspection.PreviousInspectionId,
-                    inspection.Date))
-            {
-                throw new InvalidDatetimeException(ErrorConstants.InvalidPreviouslyInspectionError);
-            }
-        }
-
         inspectionEntity.DoctorId = doctorIdWhoRegistered;
         inspectionEntity.PatientId = patientId;
-        await inspectionRepository.Add(inspectionEntity);
         
+        CheckConclusionValidity(inspectionEntity, patientId);
+        
+        if (await patientRepository.IsPatientDead(patientId)) 
+            throw new PatientIsAlreadyDeadException(ErrorConstants.PatientIsAlreadyDeadError);
+        
+        var diagnoses = await PrepareDiagnoses(inspection);
+        var consultations = PrepareConsultations(inspection);
+        
+        inspectionEntity.BasePreviousInspectionId =
+            await inspectionRepository.GetLastGeneralInspectionForPatient(patientId);
+        
+        await AddAllToDatabase(inspectionEntity, consultations, diagnoses);
+
+        return inspectionEntity.Id;
+    }
+    
+    private void ValidateInspectionNextVisitDate(InspectionCreateModel inspection)
+    {
+        if (inspection.NextVisitDate.HasValue && inspection.NextVisitDate.Value < DateTime.Now)
+            throw new InvalidDatetimeException(ErrorConstants.IncorrectDateError);
+    }
+    
+    private async Task ValidatePreviousInspection(InspectionCreateModel inspection, Guid patientId)
+    {
+        if (inspection.PreviousInspectionId is not null)
+        {
+            Guid? previousInspectionId =
+                await patientRepository.CheckPreviouslyInspection(patientId, inspection.PreviousInspectionId,
+                    inspection.Date);
+            if (previousInspectionId is null)
+                throw new InvalidDatetimeException(ErrorConstants.InvalidPreviouslyInspectionError);
+        }
+    }
+    
+    private async Task<ICollection<Diagnosis>> PrepareDiagnoses(InspectionCreateModel inspection)
+    {
         int mainDiagnosesCount = 0;
-        foreach (DiagnosisCreateModel diagnosis in inspection.Diagnoses)
+        var diagnoses = new List<Diagnosis>();
+
+        foreach (var diagnosis in inspection.Diagnoses)
         {
             if (diagnosis.Type == DiagnosisType.Main) mainDiagnosesCount++;
+            if (mainDiagnosesCount > 1)
+                throw new InvalidCountMainDiagnosesException(ErrorConstants.InvalidCountMainDiagnosesError);
 
-            if (await icd10Repository.GetByIdGuidAsync(diagnosis.IcdDiagnosisId) is null)
+            var icdDiagnosis = await icd10Repository.GetByIdGuidAsync(diagnosis.IcdDiagnosisId);
+            if (icdDiagnosis is null)
                 throw new DiagnosisNotFoundException(ErrorConstants.DiagnosesNotFoundError);
 
-            Diagnosis diagnosisEntity = DiagnosesMapper.MapCreateModelToEntity(diagnosis,
-               icd10Repository.GetByIdGuidAsync(diagnosis.IcdDiagnosisId).Result.McbCode,
-               icd10Repository.GetByIdGuidAsync(diagnosis.IcdDiagnosisId).Result.McbName);
-            diagnosisEntity.InspectionId = inspectionEntity.Id;
+            var diagnosisEntity =
+                DiagnosesMapper.MapCreateModelToEntity(diagnosis, icdDiagnosis.McbCode, icdDiagnosis.McbName);
             diagnoses.Add(diagnosisEntity);
-            await diagnosisRepository.Add(diagnosisEntity);
         }
 
-        if (mainDiagnosesCount != 1)
-            throw new InvalidCountMainDiagnosesException(ErrorConstants.InvalidCountMainDiagnosesError);
-
-
+        return diagnoses;
+    }
+    
+    private ICollection<Consultation> PrepareConsultations(InspectionCreateModel inspection)
+    {
+        var consultations = new List<Consultation>();
+        
         var specialityIds = new HashSet<Guid>();
-        foreach (ConsultationCreateModel consult in inspection.Consultations)
+
+        foreach (var consult in inspection.Consultations)
         {
             if (!specialityIds.Add(consult.SpecialityId))
-            {
                 throw new DuplicateSpecialityException(ErrorConstants.DuplicateSpecialityError);
-            }
 
-            Consultation consultationEntity = ConsultationMapper.MapCreateModelToEntity(consult);
-            consultationEntity.InspectionId = inspectionEntity.Id;
+            var consultationEntity = ConsultationMapper.MapCreateModelToEntity(consult);
             consultations.Add(consultationEntity);
-            await consultationRepository.Add(consultationEntity);
         }
-        
+
+        return consultations;
+    }
+    
+    private async void CheckConclusionValidity(Inspection inspection, Guid patientId)
+    {
         switch (inspection.Conclusion)
         {
             case Conclusion.Disease:
-                if (inspection.NextVisitDate is null)
+                if (inspection.NextVisitDate is null || inspection.DeathDate is not null)
                     throw new InvalidDatetimeException(ErrorConstants.ConditionDatetimeOfDiseaseError);
                 break;
 
             case Conclusion.Recovery:
-                if (inspection.NextVisitDate is not null && inspection.DeathDate is not null)
+                if (inspection.NextVisitDate is not null || inspection.DeathDate is not null)
                     throw new InvalidDatetimeException(ErrorConstants.ConditionDatetimeOfRecoverError);
                 break;
 
             case Conclusion.Death:
-                if (inspection.NextVisitDate is not null || inspection.DeathDate is not null)
+                if (inspection.NextVisitDate is not null || inspection.DeathDate is null)
                     throw new InvalidDatetimeException(ErrorConstants.ConditionDatetimeOfDeathError);
                 break;
         }
+    }
+    
+    private async Task AddAllToDatabase(Inspection inspectionEntity, ICollection<Consultation> consultations,
+        ICollection<Diagnosis> diagnoses)
+    {
+        await inspectionRepository.Add(inspectionEntity);
         
-        inspectionEntity.Consultations = consultations;
-        inspectionEntity.Diagnoses = diagnoses;
-        
-        return inspectionEntity.Id;
+        foreach (var diagnosis in diagnoses)
+        {
+            diagnosis.InspectionId = inspectionEntity.Id;
+            await diagnosisRepository.Add(diagnosis);
+        }
+
+        foreach (var consultation in consultations)
+        {
+            consultation.InspectionId = inspectionEntity.Id;
+            await consultationRepository.Add(consultation);
+        }
     }
 }
