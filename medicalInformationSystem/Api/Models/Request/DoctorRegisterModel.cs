@@ -26,7 +26,7 @@ public class DoctorRegisterModel(
 
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [MinLength(1, ErrorMessage = ErrorConstants.EmailLengthError)]
-    [DataType(DataType.EmailAddress, ErrorMessage = ErrorConstants.EmailValidError)]
+    [EmailAddress(ErrorMessage = ErrorConstants.EmailValidError)]
     public string Email { get; set; } = email;
 
     [DatetimeValidator(ErrorMessage = ErrorConstants.IncorrectDateError)]
