@@ -40,11 +40,8 @@ public class Inspection
     [Required(ErrorMessage = ErrorConstants.RequiredFieldError)]
     [EnumDataType(typeof(Conclusion))]
     public Conclusion Conclusion { get; set; }
-
-    // UTC DateTime for the next visit in case of Disease conclusion
     [Column("next_visit_date")] public DateTime? NextVisitDate { get; set; }
-
-    // UTC DateTime for the death in case of Death conclusion
+    
     [Column("death_date")] public DateTime? DeathDate { get; set; }
 
     [Column("base_inspection_id")] public Guid? BasePreviousInspectionId { get; set; } 

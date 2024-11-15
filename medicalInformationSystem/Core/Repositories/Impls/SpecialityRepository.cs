@@ -25,5 +25,4 @@ public class SpecialityRepository(MedicalDataContext context): ISpecialityReposi
 
         return await query.Skip(skip).Take(take).ToListAsync();
     }
-
 }

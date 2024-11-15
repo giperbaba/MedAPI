@@ -1,8 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using medicalInformationSystem.Configurations.Constants;
 using medicalInformationSystem.Data.Enum;
-using medicalInformationSystem.Enum;
-using medicalInformationSystem.Models.Request;
 
 namespace medicalInformationSystem.Api.Models.Request;
 
